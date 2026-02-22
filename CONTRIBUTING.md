@@ -1,6 +1,6 @@
-# Contributing to Wutils
+# Contributing to @niall/utils
 
-Thank you for your interest in contributing to Wutils! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to @niall/utils! This document provides guidelines and instructions for contributing to the project.
 
 ## Code of Conduct
 
@@ -20,8 +20,8 @@ Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) in all int
 2. **Clone your fork** locally:
 
    ```bash
-   git clone https://github.com/YOUR-USERNAME/Wutils.git
-   cd Wutils
+   git clone https://github.com/YOUR-USERNAME/Niall-Utils.git
+   cd Niall-Utils
    ```
 
 3. **Install dependencies**:
@@ -191,4 +191,4 @@ When contributing features:
 
 Contributors will be recognized in release notes and git history. We appreciate all contributions, from code to documentation to bug reports!
 
-Thank you for helping make Wutils better! 🎉
+Thank you for helping make @niall/utils better! 🎉

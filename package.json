@@ -1,13 +1,13 @@
 {
   "author": "eniallator",
-  "description": "Small collection of web utilities",
+  "description": "Small collection of my web utilities",
   "engines": {
     "node": ">=25.4.0"
   },
-  "homepage": "https://github.com/eniallator/Wutils",
+  "homepage": "https://github.com/eniallator/Niall-Utils",
   "license": "MIT",
   "main": "dist/index.js",
-  "name": "wutils",
+  "name": "@niall/utils",
   "packageManager": "yarn@4.12.0",
   "type": "module",
   "types": "dist/index.d.ts",

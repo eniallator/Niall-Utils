@@ -1,7 +1,6 @@
-# wutils
+# Niall-Utils
 
-Short for web utils.\
-Small collection of utilities: DOM helpers, functional utilities, small math helpers, safe guards, and tiny data structures.
+Small collection of my utilities: DOM helpers, functional utilities, small math helpers, safe guards, and tiny data structures.
 
 ## Overview
 
@@ -11,7 +10,7 @@ Small collection of utilities: DOM helpers, functional utilities, small math hel
 ## Quick example
 
 ```typescript
-import { dom, raise, cartesianToPolar, tuple } from "wutils";
+import { dom, raise, cartesianToPolar, tuple } from "@niall/utils";
 
 const el = dom.toHtml(`<div><span>Hello</span></div>`);
 console.log(cartesianToPolar(1, 1));
