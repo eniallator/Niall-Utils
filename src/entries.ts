@@ -16,7 +16,7 @@ export const typedToEntries = <O extends object>(
   obj: O,
   includeSymbols: boolean = false
 ): Entry<O>[] =>
-  typedKeys(obj, includeSymbols).map(key => tuple(key, obj[key])) as Entry<O>[];
+  typedKeys(obj, includeSymbols).map(key => tuple(key, obj[key]));
 
 export const typedFromEntries = <O extends object>(entries: Entry<O>[]): O =>
   Object.fromEntries(entries) as O;

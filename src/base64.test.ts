@@ -50,11 +50,11 @@ describe("base64FromUint", () => {
   });
 
   it("returns empty string for negative numbers", () => {
-    expect(() => base64FromUint(-1)).toThrowError("Expected uint but got -1");
+    expect(() => base64FromUint(-1)).toThrow("Expected uint but got -1");
   });
 
   it("returns empty string for NaN", () => {
-    expect(() => base64FromUint(Number.NaN)).toThrowError(
+    expect(() => base64FromUint(Number.NaN)).toThrow(
       "Expected uint but got NaN"
     );
   });

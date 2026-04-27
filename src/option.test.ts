@@ -113,12 +113,12 @@ describe("Option", () => {
   it("tap calls function if Some", () => {
     const cb = vi.fn();
     Option.some(7).tap(cb);
-    expect(cb).toBeCalledWith(7);
+    expect(cb).toHaveBeenCalledWith(7);
   });
   it("tap does not call function if None", () => {
     const cb = vi.fn();
     Option.none<number>().tap(cb);
-    expect(cb).not.toBeCalled();
+    expect(cb).not.toHaveBeenCalled();
   });
 
   // --- fold ---
