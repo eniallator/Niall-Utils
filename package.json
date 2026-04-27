@@ -7,7 +7,7 @@
   "homepage": "https://github.com/eniallator/Niall-Utils",
   "license": "MIT",
   "main": "dist/index.js",
-  "name": "@niall/utils",
+  "name": "niall-utils",
   "packageManager": "yarn@4.12.0",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -38,7 +38,7 @@
     "lint": "eslint ./src",
     "typecheck": "tsc --noEmit",
     "findissues": "yarn typecheck && yarn lint",
-    "publish": "npm publish --tolerate-republish",
+    "publish": "npm publish --access=public --tolerate-republish",
     "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test",
     "bump-and-release": "powershell -ExecutionPolicy Bypass -File ./scripts/bump-and-release.ps1",
     "release": "powershell -ExecutionPolicy Bypass -File ./scripts/release.ps1"

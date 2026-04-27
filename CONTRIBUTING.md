@@ -1,6 +1,6 @@
-# Contributing to @niall/utils
+# Contributing to niall-utils
 
-Thank you for your interest in contributing to @niall/utils! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to niall-utils! This document provides guidelines and instructions for contributing to the project.
 
 ## Code of Conduct
 
@@ -119,7 +119,7 @@ describe("formatLocaleDate", () => {
 Create a descriptive branch name:
 
 ```bash
-git checkout -b feature/add-new-guard
+git checkout -b feature/add-new-util
 # or
 git checkout -b fix/issue-description
 ```
@@ -191,4 +191,4 @@ When contributing features:
 
 Contributors will be recognized in release notes and git history. We appreciate all contributions, from code to documentation to bug reports!
 
-Thank you for helping make @niall/utils better! 🎉
+Thank you for helping make niall-utils better! 🎉

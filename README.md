@@ -10,7 +10,7 @@ Small collection of my utilities: DOM helpers, functional utilities, small math 
 ## Quick example
 
 ```typescript
-import { dom, raise, cartesianToPolar, tuple } from "@niall/utils";
+import { dom, raise, cartesianToPolar, tuple } from "niall-utils";
 
 const el = dom.toHtml(`<div><span>Hello</span></div>`);
 console.log(cartesianToPolar(1, 1));
