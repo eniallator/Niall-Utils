@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mapFilter, mapFind } from "./map";
+import { mapAccumulate, mapFilter, mapFind } from "./map";
 import { Option } from "./option";
 
 describe("mapFilter", () => {
@@ -52,5 +52,29 @@ describe("mapFind", () => {
 
   it("returns null for empty input array", () => {
     expect(mapFind([], n => n)).toBeNull();
+  });
+});
+
+describe("mapAccumulate", () => {
+  it("accumulates state while mapping values", () => {
+    const arr = [1, 2, 3, 4];
+    const result = mapAccumulate(arr, 0, (acc, value) => [
+      acc + value,
+      acc + value,
+    ]);
+    expect(result).toEqual([1, 3, 6, 10]);
+  });
+
+  it("passes index and array into the callback", () => {
+    const arr = [10, 20, 30];
+    const result = mapAccumulate(arr, 0, (acc, value, index, values) => [
+      acc + value,
+      `${index}:${values.length}`,
+    ]);
+    expect(result).toEqual(["0:3", "1:3", "2:3"]);
+  });
+
+  it("returns an empty array for empty input", () => {
+    expect(mapAccumulate([], 5, () => [0, "ignored"])).toEqual([]);
   });
 });

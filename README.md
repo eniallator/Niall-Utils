@@ -24,32 +24,45 @@ try {
 ## API Summary
 
 - **DOM (`dom`)**
-  - `get(selector, base?)` — select an element or throw.
-  - `toHtml(htmlString)` — create an HTMLElement from a string template.
-  - `toAttrs(attrs)` — serialize attribute map to HTML attrs.
-  - `addListener(el, event, fn)` — strongly typed `addEventListener` wrapper.
+  - `get(selector, base?)` - select an element or throw.
+  - `toHtml(htmlString)` - create an HTMLElement from a string template.
+  - `toAttrs(attrs)` - serialize attribute map to HTML attrs.
+  - `addListener(el, event, fn)` - strongly typed `addEventListener` wrapper.
 
 - **Utilities (`utils`)**
-  - `raise(error)` — throw helper to help with typed `never` flows.
-  - `attempt(fn, onError?)` — run an unsafe function with optional recovery.
-  - `checkExhausted(value: never)` — helper for exhaustive switches.
+  - `raise(error)` - throw helper to help with typed `never` flows.
+  - `attempt(fn, onError?)` - run an unsafe function with optional recovery.
+  - `checkExhausted(value: never)` - helper for exhaustive switches.
 
 - **Maths & geometry (`maths`)**
   - `cartesianToPolar`, `polarToCartesian`, `positiveMod` and supporting numeric type helpers.
 
+- **Color utilities (`color`)**
+  - `lerpColors`, `createWeightedGradient` - color interpolation and weighted gradient builder.
+
+- **Animation helpers (`animate`)**
+  - `sequence`, `timeSequence`, `multiSequence` - lightweight frame sequence utilities.
+
 - **Data helpers**
-  - `tuple`, `zip`, `map`, `entries`, `generate`, `formatDate`, `b64` — small focused utilities (see `src/` for full list).
+  - `tuple`, `zip`, `map`, `mapAccumulate`, `slidingWindow`, `entries`, `generate`, `formatLocaleDate`, `base64` - small focused utilities (see `src/` for full list).
+
+- **Type helpers**
+  - `DiscriminatedOptions`, `stringInfer`, `unionToTuple` - type-level utilities for safer inference and discriminated unions.
 
 - **Functional & option/monad helpers**
-  - `monad`, `option`, `tagged` — helpers for safer functional code.
+  - `monad`, `option`, `tagged` - helpers for safer functional code.
 
 ## Files of interest
 
-- `src/dom.ts` — DOM helpers and small HTML helpers.
-- `src/utils.ts` — `raise`, `attempt`, and `checkExhausted`.
-- `src/maths.ts` — geometry helpers and numeric type utilities.
-- `src/tuple.ts`, `src/zip.ts`, `src/map.ts`, `src/entries.ts` — collection helpers.
-- `src/monad.ts`, `src/option.ts` — small functional primitives.
+- `src/dom.ts` - DOM helpers and small HTML helpers.
+- `src/utils.ts` - `raise`, `attempt`, and `checkExhausted`.
+- `src/maths.ts` - geometry helpers and numeric type utilities.
+- `src/tuple.ts`, `src/zip.ts`, `src/map.ts`, `src/slidingWindow.ts`, `src/entries.ts` - collection helpers.
+- `src/color.ts` - color interpolation and gradient utilities.
+- `src/animate.ts` - lightweight animation and timing helpers.
+- `src/discriminatedOptions.ts` - discriminated union option helpers.
+- `src/stringInfer.ts`, `src/unionToTuple.ts` - type inference utilities.
+- `src/monad.ts`, `src/option.ts` - small functional primitives.
 
 ## Tests
 

@@ -1,4 +1,5 @@
 export * from "./base64.ts";
+export * from "./color.ts";
 export * from "./discriminatedOptions.ts";
 export * from "./dom.ts";
 export * from "./entries.ts";
@@ -7,6 +8,7 @@ export * from "./map.ts";
 export * from "./maths.ts";
 export * from "./monad.ts";
 export * from "./option.ts";
+export * from "./slidingWindow.ts";
 export * from "./stringInfer.ts";
 export * from "./tagged.ts";
 export * from "./tuple.ts";

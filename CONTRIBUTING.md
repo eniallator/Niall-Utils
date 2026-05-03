@@ -178,7 +178,7 @@ When reporting bugs or suggesting features:
 
 When contributing features:
 
-- Update [README.md](README.md) if adding new public APIs or major features
+- Update [README.md](README.md) if adding new public APIs or major features such as new utility files
 - Consider the clarity of type definitions for end users
 
 ## Questions?

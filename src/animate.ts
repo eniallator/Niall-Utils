@@ -16,7 +16,10 @@ export const sequence =
     return {
       frame:
         frames.at(index) ?? raise(new Error(`Frame index not found: ${index}`)),
-      delta: (currTotal % perFrame) / perFrame,
+      delta:
+        loop || rawIndex < frames.length
+          ? (currTotal % perFrame) / perFrame
+          : 1,
     };
   };
 
@@ -34,7 +37,8 @@ export function multiSequence<S extends Record<string, unknown[]>>(
   sequences: S,
   msPerFrame: number,
   initial: keyof S,
-  temporal?: true
+  temporal?: true,
+  start?: Date
 ): (target: keyof S, now?: Date) => SequenceResult<S[keyof S][number]>;
 export function multiSequence<S extends Record<string, unknown[]>>(
   sequences: S,
@@ -46,7 +50,8 @@ export function multiSequence<S extends Record<string, unknown[]>>(
   sequences: S,
   msPerFrame: number,
   initial: keyof S,
-  temporal: boolean = true
+  temporal: boolean = true,
+  start?: Date
 ) {
   const createSeq = temporal ? timeSequence : sequence;
 
@@ -54,7 +59,9 @@ export function multiSequence<S extends Record<string, unknown[]>>(
   let seq = createSeq(
     sequences[initial] ??
       raise(new Error(`Sequence not found ${String(initial)}`)),
-    msPerFrame
+    msPerFrame,
+    true,
+    start
   );
 
   return (target: keyof S, arg?: Date | number) => {
@@ -67,7 +74,9 @@ export function multiSequence<S extends Record<string, unknown[]>>(
       seq = createSeq(
         sequences[target] ??
           raise(new Error(`Sequence not found ${String(target)}`)),
-        msPerFrame
+        msPerFrame,
+        true,
+        arg instanceof Date ? arg : undefined
       );
     }
 

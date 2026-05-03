@@ -15,12 +15,15 @@ const isOption: (
 export const mapFilter = <I, O extends NonNullable<unknown>>(
   arr: readonly I[],
   callback: MapFn<I, O>
-): O[] =>
-  arr.reduce((acc: O[], item, i, arr) => {
-    const outOrOpt = callback(item, i, arr);
-    const out = isOption(outOrOpt) ? outOrOpt.getOrNull() : outOrOpt;
-    return out != null ? [...acc, out] : acc;
-  }, []);
+): O[] => {
+  const output: O[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const itemOrOpt = callback(arr[i] as I, i, arr);
+    const item = isOption(itemOrOpt) ? itemOrOpt.getOrNull() : itemOrOpt;
+    if (item != null) output.push(item);
+  }
+  return output;
+};
 
 export const mapFind = <I, O extends NonNullable<unknown>>(
   arr: readonly I[],
@@ -32,4 +35,21 @@ export const mapFind = <I, O extends NonNullable<unknown>>(
     if (out != null) return out;
   }
   return null;
+};
+
+export type NonEmptyArray<T> = [T, ...T[]];
+
+export const mapAccumulate = <I, Acc, O>(
+  arr: I[],
+  initial: Acc,
+  callback: (acc: Acc, val: I, index: number, arr: I[]) => [Acc, O]
+): O[] => {
+  let acc = initial;
+  const output: O[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const [nextAcc, out] = callback(acc, arr[i] as I, i, arr);
+    output.push(out);
+    acc = nextAcc;
+  }
+  return output;
 };
