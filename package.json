@@ -1,56 +1,65 @@
 {
-  "author": "eniallator",
+  "name": "niall-utils",
+  "version": "1.3.0",
   "description": "Small collection of my web utilities",
-  "engines": {
-    "node": ">=25.4.0"
+  "author": "eniallator",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eniallator/Niall-Utils.git"
   },
   "homepage": "https://github.com/eniallator/Niall-Utils",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
+  "bugs": {
+    "url": "https://github.com/eniallator/Niall-Utils/issues"
   },
-  "name": "niall-utils",
-  "packageManager": "yarn@4.14.1",
+  "keywords": [
+    "utilities",
+    "typescript",
+    "web-utils"
+  ],
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts",
-  "version": "1.3.0",
-  "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.2",
-    "@eslint/compat": "^2.1.0",
-    "@eslint/js": "^10.0.1",
-    "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/eslint": "^9.6.1",
-    "@typescript-eslint/eslint-plugin": "^8.59.3",
-    "@typescript-eslint/parser": "^8.59.3",
-    "eslint": "^10.4.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-prettier": "^5.5.5",
-    "jsdom": "^29.1.1",
-    "prettier": "^3.8.3",
-    "publint": "^0.3.21",
-    "strip-ansi": "^7.2.0",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.3",
-    "vitest": "^4.1.6"
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
   },
+  "packageManager": "yarn@4.14.1",
   "scripts": {
     "test": "vitest run --passWithNoTests",
     "build": "tsc",
     "lint": "eslint ./src",
     "typecheck": "tsc --noEmit",
     "findissues": "yarn typecheck && yarn lint",
-    "publish": "npm publish --access=public --tolerate-republish",
+    "publish": "npm publish --access=public",
     "bump-and-release": "powershell -ExecutionPolicy Bypass -File ./scripts/bump-and-release.ps1",
     "release": "powershell -ExecutionPolicy Bypass -File ./scripts/release.ps1",
     "publint": "publint run",
     "attw": "attw --pack .",
-    "pack:inspect": "node ./scripts/check-package-output.cjs",
-    "package:output-check": "node ./scripts/check-package-output.cjs",
-    "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test && yarn publint && yarn package:output-check"
+    "check-output": "powershell -ExecutionPolicy Bypass -File ./scripts/check-package-output.ps1",
+    "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test && yarn publint && yarn check-output"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@eslint/compat": "^2.1.0",
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.3",
+    "publint": "^0.3.21",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.3",
+    "vitest": "^4.1.6"
   }
 }
