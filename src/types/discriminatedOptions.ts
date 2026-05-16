@@ -1,4 +1,4 @@
-import type { UnionToTuple } from "./unionToTuple.ts";
+import type { UnionToTuple } from "../core/unionToTuple.ts";
 
 type DeepKeys<T extends readonly unknown[]> = {
   [K in keyof T]: keyof T[K];

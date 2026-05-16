@@ -1,8 +1,8 @@
-import { mapAccumulate, mapFind } from "./map.ts";
-import { slidingWindow } from "./slidingWindow.ts";
-import { tuple } from "./tuple.ts";
-import { raise } from "./utils.ts";
-import { zip } from "./zip.ts";
+import { mapAccumulate, mapFind } from "../functional/map.ts";
+import { slidingWindow } from "../math/slidingWindow.ts";
+import { tuple } from "../core/tuple.ts";
+import { raise } from "../core/utils.ts";
+import { zip } from "../data/zip.ts";
 
 export const lerpColors = (a: string, b: string, percent: number): string => {
   const aChannels =

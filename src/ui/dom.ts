@@ -1,4 +1,4 @@
-import { raise } from "./utils.ts";
+import { raise } from "../core/utils.ts";
 
 import type {
   Alphabet,
@@ -6,7 +6,7 @@ import type {
   StringExtract,
   StringGet,
   Whitespace,
-} from "./stringInfer.ts";
+} from "../core/stringInfer.ts";
 
 const addListener = <
   E extends HTMLElement,

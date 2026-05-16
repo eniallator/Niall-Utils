@@ -1,4 +1,4 @@
-import type { Decrement } from "./maths.ts";
+import type { Decrement } from "../math/maths.ts";
 
 export type Whitespace = " " | "\t" | "\n" | "\r";
 export type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";

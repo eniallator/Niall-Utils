@@ -1,7 +1,7 @@
-import { unsafeTag } from "./tagged.ts";
-import { raise } from "./utils.ts";
+import { unsafeTag } from "../core/tagged.ts";
+import { raise } from "../core/utils.ts";
 
-import type { Tagged } from "./tagged.ts";
+import type { Tagged } from "../core/tagged.ts";
 
 export type Base64 = Tagged<string, "Base64">;
 export const unsafeBase64 = unsafeTag<Base64>();

@@ -1,5 +1,5 @@
 import { positiveMod } from "./maths.ts";
-import type { FillTuple } from "./tuple.ts";
+import type { FillTuple } from "../core/tuple.ts";
 
 export const slidingWindow = <T, S extends number>(
   arr: T[],

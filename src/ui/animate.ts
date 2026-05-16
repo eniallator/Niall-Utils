@@ -1,4 +1,4 @@
-import { raise } from "./utils.ts";
+import { raise } from "../core/utils.ts";
 
 interface SequenceResult<F> {
   frame: F;

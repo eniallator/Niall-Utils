@@ -1,4 +1,4 @@
-import { tuple } from "./tuple.ts";
+import { tuple } from "../core/tuple.ts";
 
 export const typedKeys = <O extends object>(
   obj: O,

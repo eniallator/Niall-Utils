@@ -1,6 +1,6 @@
-import { tuple } from "./tuple.ts";
+import { tuple } from "../core/tuple.ts";
 
-import type { FillTuple } from "./tuple.ts";
+import type { FillTuple } from "../core/tuple.ts";
 
 export const cartesianToPolar = (x: number, y: number) =>
   tuple(Math.hypot(x, y), Math.atan2(y, x));

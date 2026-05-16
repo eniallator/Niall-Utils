@@ -1,4 +1,4 @@
-import type { RecursionLimit } from "./maths.ts";
+import type { RecursionLimit } from "../math/maths.ts";
 
 export const tuple = <const T extends unknown[]>(...tuple: T) => tuple;
 

@@ -1,5 +1,5 @@
 import { Monad } from "./monad.ts";
-import { raise } from "./utils.ts";
+import { raise } from "../core/utils.ts";
 
 export type OptionType = "some" | "none" | undefined;
 type FoldOptionType<T extends OptionType, S, N, D = S | N> = T extends "some"

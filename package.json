@@ -7,12 +7,19 @@
   "homepage": "https://github.com/eniallator/Niall-Utils",
   "license": "MIT",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "name": "niall-utils",
   "packageManager": "yarn@4.14.1",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "types": "dist/index.d.ts",
   "version": "1.3.0",
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
@@ -25,6 +32,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
+    "publint": "^0.3.21",
     "strip-ansi": "^7.2.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
@@ -37,8 +45,12 @@
     "typecheck": "tsc --noEmit",
     "findissues": "yarn typecheck && yarn lint",
     "publish": "npm publish --access=public --tolerate-republish",
-    "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test",
     "bump-and-release": "powershell -ExecutionPolicy Bypass -File ./scripts/bump-and-release.ps1",
-    "release": "powershell -ExecutionPolicy Bypass -File ./scripts/release.ps1"
+    "release": "powershell -ExecutionPolicy Bypass -File ./scripts/release.ps1",
+    "publint": "publint run",
+    "attw": "attw --pack .",
+    "pack:inspect": "node ./scripts/check-package-output.cjs",
+    "package:output-check": "node ./scripts/check-package-output.cjs",
+    "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test && yarn publint && yarn package:output-check"
   }
 }
