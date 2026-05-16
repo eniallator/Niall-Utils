@@ -10,6 +10,9 @@ export const polarToCartesian = (magnitude: number, angle: number) =>
 
 export const positiveMod = (a: number, b: number) => ((a % b) + b) % b;
 
+export const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
 export type RecursionLimit = 1001;
 
 export type Decrement<N extends number> =
