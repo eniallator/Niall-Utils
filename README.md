@@ -54,15 +54,17 @@ try {
 
 ## Files of interest
 
-- `src/dom.ts` - DOM helpers and small HTML helpers.
-- `src/utils.ts` - `raise`, `attempt`, and `checkExhausted`.
-- `src/maths.ts` - geometry helpers and numeric type utilities.
-- `src/tuple.ts`, `src/zip.ts`, `src/map.ts`, `src/slidingWindow.ts`, `src/entries.ts` - collection helpers.
-- `src/color.ts` - color interpolation and gradient utilities.
-- `src/animate.ts` - lightweight animation and timing helpers.
-- `src/discriminatedOptions.ts` - discriminated union option helpers.
-- `src/stringInfer.ts`, `src/unionToTuple.ts` - type inference utilities.
-- `src/monad.ts`, `src/option.ts` - small functional primitives.
+- **`src/ui/dom.ts`** - DOM helpers and small HTML helpers.
+- **`src/core/utils.ts`** - `raise`, `attempt`, and `checkExhausted`.
+- **`src/math/maths.ts`** - geometry helpers and numeric type utilities.
+- **`src/data/`** - `tuple`, `zip`, `map`, `mapAccumulate`, `slidingWindow`, `entries`, `generate`.
+- **`src/ui/color.ts`** - color interpolation and gradient utilities.
+- **`src/ui/animate.ts`** - lightweight animation and timing helpers.
+- **`src/types/discriminatedOptions.ts`** - discriminated union option helpers.
+- **`src/core/stringInfer.ts`, `src/core/unionToTuple.ts`** - type inference utilities.
+- **`src/functional/monad.ts`, `src/functional/option.ts`** - small functional primitives.
+- **`src/encoding/base64.ts`** - base64 encoding utilities.
+- **`src/format/formatLocaleDate.ts`** - locale date formatting.
 
 ## Tests
 

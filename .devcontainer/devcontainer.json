@@ -1,0 +1,28 @@
+{
+  "name": "Niall-Utils",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "runArgs": ["--name", "niall-utils"],
+  "containerEnv": {
+    "CI": "1"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "postCreateCommand": {
+    "git": "git config --global core.autocrlf true",
+    "yarn": "sudo env CI=1 corepack enable && yarn"
+  }
+}

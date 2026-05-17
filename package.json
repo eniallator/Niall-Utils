@@ -41,11 +41,11 @@
     "typecheck": "tsc --noEmit",
     "findissues": "yarn typecheck && yarn lint",
     "publish": "npm publish --access=public",
-    "bump-and-release": "powershell -ExecutionPolicy Bypass -File ./scripts/bump-and-release.ps1",
-    "release": "powershell -ExecutionPolicy Bypass -File ./scripts/release.ps1",
+    "bump-and-release": "./scripts/bump-and-release.sh",
+    "release": "./scripts/release.sh",
     "publint": "publint run",
     "attw": "attw --pack .",
-    "check-output": "powershell -ExecutionPolicy Bypass -File ./scripts/check-package-output.ps1",
+    "check-output": "./scripts/check-output.sh",
     "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test && yarn publint && yarn check-output"
   },
   "devDependencies": {

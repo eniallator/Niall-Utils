@@ -1,7 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 yarn prepublish
 yarn publish
 
-$VERSION=$(cat package.json | jq -r '.version')
+VERSION=$(node -p "require('./package.json').version")
 
 git add .
 git commit -m "Release $VERSION"

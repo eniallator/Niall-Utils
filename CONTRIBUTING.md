@@ -10,11 +10,17 @@ Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) in all int
 
 ### Prerequisites
 
-- Node.js 25.4.0 or higher
-- Yarn 4.12.0 or higher
+- Node.js 18 or higher
+- Yarn 4 or higher
 - Basic familiarity with TypeScript and runtime type checking concepts
 
 ### Setting Up Your Development Environment
+
+#### Using Dev Containers (recommended)
+
+Open this repository in VS Code with the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-containers) extension installed. The `.devcontainer/devcontainer.json` provides a pre-configured environment with Node.js 22, Git, and all dependencies installed automatically.
+
+#### Manually
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
