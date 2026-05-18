@@ -24,7 +24,7 @@ export const lerpColors = (a: string, b: string, percent: number): string => {
 type ColorWeight = [string, number];
 
 export const createWeightedGradient = (
-  gradient: ColorWeight[]
+  gradient: readonly ColorWeight[]
 ): ((colorPercent: number) => string) => {
   const totalWeight = gradient.reduce((acc, row) => acc + row[1], 0);
 

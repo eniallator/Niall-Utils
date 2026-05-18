@@ -1,10 +1,7 @@
 {
   "name": "Niall-Utils",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
   "runArgs": ["--name", "niall-utils"],
-  "containerEnv": {
-    "CI": "1"
-  },
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/java:1": {
@@ -14,15 +11,34 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "adpyke.codesnap",
+        "arcanis.vscode-zipfs",
+        "christian-kohler.npm-intellisense",
+        "davidanson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
+        "donjayamanne.githistory",
         "eamodio.gitlens",
-        "ms-vscode.vscode-typescript-next"
+        "esbenp.prettier-vscode",
+        "fill-labs.dependi",
+        "github.copilot-chat",
+        "gruntfuggly.todo-tree",
+        "inferrinizzard.prettier-sql-vscode",
+        "jinsihou.diff-tool",
+        "mattpocock.ts-error-translator",
+        "mhutchie.git-graph",
+        "mohd-akram.vscode-html-format",
+        "ms-vscode.makefile-tools",
+        "ms-vscode.vscode-typescript-next",
+        "rbbit.typescript-hero",
+        "ritwickdey.liveserver",
+        "stevencl.adddoccomments",
+        "tyriar.lorem-ipsum",
+        "wix.vscode-import-cost"
       ]
     }
   },
   "postCreateCommand": {
     "git": "git config --global core.autocrlf true",
-    "yarn": "sudo env CI=1 corepack enable && yarn"
+    "yarn": "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && sudo -E corepack enable && yarn"
   }
 }

@@ -19,8 +19,7 @@ describe("debounce", () => {
     expect(fn).not.toHaveBeenCalled();
 
     vi.advanceTimersByTime(100);
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith("a");
+    expect(fn).toHaveBeenCalledExactlyOnceWith("a");
   });
 
   it("should reset the timer on each call", () => {
@@ -34,8 +33,7 @@ describe("debounce", () => {
     expect(fn).not.toHaveBeenCalled();
 
     vi.advanceTimersByTime(50);
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith("second");
+    expect(fn).toHaveBeenCalledExactlyOnceWith("second");
   });
 
   it("should cancel pending execution", () => {
@@ -56,8 +54,7 @@ describe("debounce", () => {
     debounced.cancel();
     debounced("second");
     vi.advanceTimersByTime(100);
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith("second");
+    expect(fn).toHaveBeenCalledExactlyOnceWith("second");
   });
 
   it("should handle multiple arguments", () => {
@@ -66,6 +63,6 @@ describe("debounce", () => {
 
     debounced(1, "two", { three: true });
     vi.advanceTimersByTime(100);
-    expect(fn).toHaveBeenCalledWith(1, "two", { three: true });
+    expect(fn).toHaveBeenCalledExactlyOnceWith(1, "two", { three: true });
   });
 });

@@ -5,5 +5,4 @@ export * from "./format";
 export * from "./functional";
 export * from "./math";
 export * from "./timing";
-export * from "./types";
 export * from "./ui";

@@ -30,7 +30,9 @@ const get = <E extends HTMLElement>(
   baseEl.querySelector<E>(selector) ??
   raise(new Error(`Could not find element with selector "${selector}"`));
 
-const toAttrs = (attrs: Record<string, string | number | null>): string =>
+const toAttrs = (
+  attrs: Readonly<Record<string, string | number | null>>
+): string =>
   Object.entries(attrs)
     .map(([key, val]) => (val != null ? `${key}="${val}"` : key))
     .join(" ");

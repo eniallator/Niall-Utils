@@ -40,9 +40,9 @@ export const mapFind = <I, O extends NonNullable<unknown>>(
 export type NonEmptyArray<T> = [T, ...T[]];
 
 export const mapAccumulate = <I, Acc, O>(
-  arr: I[],
+  arr: readonly I[],
   initial: Acc,
-  callback: (acc: Acc, val: I, index: number, arr: I[]) => [Acc, O]
+  callback: (acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O]
 ): O[] => {
   let acc = initial;
   const output: O[] = [];
