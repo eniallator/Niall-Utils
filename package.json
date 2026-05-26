@@ -1,6 +1,6 @@
 {
   "name": "niall-utils",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Small collection of my web utilities",
   "author": "eniallator",
   "license": "MIT",
@@ -61,5 +61,8 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4",
     "vitest": "^4.1.6"
+  },
+  "resolutions": {
+    "@arethetypeswrong/core@npm:0.18.2": "patch:@arethetypeswrong/core@npm%3A0.18.2#~/.yarn/patches/@arethetypeswrong-core-npm-0.18.2-d9050fce15.patch"
   }
 }
