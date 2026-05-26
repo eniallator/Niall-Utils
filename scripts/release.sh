@@ -2,7 +2,7 @@
 set -euo pipefail
 
 yarn prepublish
-yarn publish
+yarn publish --access=public
 
 VERSION=$(node -p "require('./package.json').version")
 

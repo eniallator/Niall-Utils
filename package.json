@@ -40,7 +40,6 @@
     "lint": "eslint ./src",
     "typecheck": "tsc --noEmit",
     "findissues": "yarn typecheck && yarn lint",
-    "publish": "npm publish --access=public",
     "bump-and-release": "./scripts/bump-and-release.sh",
     "release": "./scripts/release.sh",
     "publint": "publint run",
