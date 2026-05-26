@@ -34,7 +34,10 @@
         "stevencl.adddoccomments",
         "tyriar.lorem-ipsum",
         "wix.vscode-import-cost"
-      ]
+      ],
+      "settings": {
+        "java.import.gradle.java.home": "/usr/local/sdkman/candidates/java/current"
+      }
     }
   },
   "postCreateCommand": {

@@ -1,4 +1,4 @@
-import type { UnionToTuple } from "../core/unionToTuple.ts";
+import type { UnionToTuple } from "./unionToTuple.ts";
 
 type DeepKeys<T extends readonly unknown[]> = {
   [K in keyof T]: keyof T[K];
@@ -18,7 +18,7 @@ type UnionToPartialRecurse<
  *
  * Consider the following:
  * type Test = { a: string } | { b: number };
- * const obj = {a: "foo"} as Test;
+ * const obj: Test = {a: "foo"};
  *
  * Normally the following will type error saying that the properties aren't defined:
  * const {a, b} = obj;
@@ -26,9 +26,4 @@ type UnionToPartialRecurse<
  * However this will not, as it will make Test equivalent to ({ a: string; b: undefined } | { a: undefined; b: number }):
  * const {a, b} = obj as UnionToPartial<Test>;
  */
-type UnionToPartial<T> = UnionToPartialRecurse<UnionToTuple<T>>;
-
-export type DiscriminatedOptions<D, U> = {
-  external: D & U;
-  internal: D & UnionToPartial<U>;
-};
+export type UnionToPartial<T> = UnionToPartialRecurse<UnionToTuple<T>>;
