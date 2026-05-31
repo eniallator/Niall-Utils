@@ -1,0 +1,12 @@
+{
+  "name": "Niall-Utils",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "runArgs": [
+    "--name",
+    "niall-utils"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "postCreateCommand": "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && sudo -E corepack enable && yarn"
+}

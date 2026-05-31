@@ -6,3 +6,5 @@ dist
 .pnp.cjs
 .pnp.loader.mjs
 .devcontainer/devcontainer-lock.json
+.devcontainer/devcontainer.local.json
+.devcontainer/devcontainer.json
