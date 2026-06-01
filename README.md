@@ -9,39 +9,23 @@ Small collection of my utilities: DOM helpers, functional utilities, small math 
 
 ## Local Dev Container Configuration
 
-This repository uses a **split devcontainer config** so that the public repository stays minimal while each developer keeps their own extensions and settings private:
+This repository includes an example devcontainer configuration to help new contributors get started quickly.
 
-| File | Purpose |
-|------|---------|
-| `.devcontainer/devcontainer.base.json` | Minimal shared config (base image, features, core setup) — committed to the repo |
-| `.devcontainer/devcontainer.local.json` | Your personal VS Code extensions, settings, and git user config — **gitignored** |
-| `.devcontainer/devcontainer.json` | Generated output — produced by merging the two files above |
-
-### How the merge works
-
-The `merge-devcontainer.sh` (bash) and `merge-devcontainer.ps1` (PowerShell) scripts recursively merge `devcontainer.base.json` and `devcontainer.local.json` into `devcontainer.json` using `jq -s '.[0] * .[1]'`. This means:
-
-- **Objects** are deep-merged (local values override base values for the same key).
-- **Arrays** (e.g. `extensions`) are concatenated — both base and local arrays are included.
+- **Example file:** `.devcontainer/devcontainer.example.json` — a sane default for this project (committed).
+- **Your personal config:** Copy the example to `.devcontainer/devcontainer.json` and customize it for your environment. The local `devcontainer.json` is intended to be kept private and should not be committed.
 
 ### Getting started
 
-1. Configure your personal settings in `.devcontainer/devcontainer.local.json`.
-2. Run the merge script to generate the final config:
+1. Copy the example into your local devcontainer file:
 
-   ```bash
-   # Bash / Git Bash
-   scripts/merge-devcontainer.sh
+  ```bash
+  cp .devcontainer/devcontainer.example.json .devcontainer/devcontainer.json
+  ```
 
-   # PowerShell
-   scripts\merge-devcontainer.ps1
-   ```
+1. Edit `.devcontainer/devcontainer.json` to add any personal extensions or settings you need.
+2. In VS Code run `Dev Containers: Rebuild Container` (or `Reopen in Container`) to apply the configuration.
 
-3. Rebuild or reopen the container with `Dev Containers: Rebuild Container` in VS Code.
-
-> **Note:** If you change `.devcontainer/devcontainer.local.json` at any point, you must re-run the merge script and rebuild the container for the changes to take effect.
-
-This keeps the public repository config minimal while letting you keep your own development extras private.
+> **Note:** If you update your local `.devcontainer/devcontainer.json`, rebuild the container for changes to take effect.
 
 ## Quick example
 

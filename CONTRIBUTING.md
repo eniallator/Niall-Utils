@@ -18,21 +18,18 @@ Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) in all int
 
 #### Using Dev Containers (recommended)
 
-Open this repository in VS Code with the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-containers) extension installed. The `.devcontainer/devcontainer.base.json` provides a minimal shared environment with Node.js 22, Git, and all dependencies installed automatically.
+Open this repository in VS Code with the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-containers) extension installed. To get started quickly, copy the provided example devcontainer into your local config and customize it as needed.
 
-To add your personal VS Code extensions and settings, create `.devcontainer/devcontainer.local.json` (this file is gitignored). Then run the merge script to generate the final config:
+1. Copy the example file into place:
 
-```bash
-# Bash / Git Bash
-scripts/merge-devcontainer.sh
+   ```bash
+   cp .devcontainer/devcontainer.example.json .devcontainer/devcontainer.json
+   ```
 
-# PowerShell
-scripts\merge-devcontainer.ps1
-```
+2. Edit `.devcontainer/devcontainer.json` to add any personal VS Code extensions, settings, or environment tweaks you need. Treat this file as local and do not commit it.
+3. Rebuild the container with `Dev Containers: Rebuild Container` (or `Reopen in Container`) in VS Code.
 
-Finally, rebuild the container with `Dev Containers: Rebuild Container` in VS Code.
-
-> **Important:** If you change `.devcontainer/devcontainer.local.json` at any point, you must re-run the merge script and rebuild the container for the changes to take effect.
+> **Important:** If you change your local `.devcontainer/devcontainer.json`, rebuild the container for changes to take effect.
 
 #### Manually
 
