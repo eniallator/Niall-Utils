@@ -1,4 +1,4 @@
-export * from "./stringInfer.ts";
+export * from "./stringTypes.ts";
 export * from "./tagged.ts";
 export * from "./tuple.ts";
 export * from "./unionToPartial.ts";

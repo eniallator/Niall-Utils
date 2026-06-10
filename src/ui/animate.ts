@@ -3,6 +3,7 @@ import { raise } from "../core/utils.ts";
 interface SequenceResult<F> {
   frame: F;
   delta: number;
+  index: number;
 }
 
 export const sequence =
@@ -14,6 +15,7 @@ export const sequence =
       : Math.min(rawIndex, frames.length - 1);
 
     return {
+      index,
       frame:
         frames.at(index) ?? raise(new Error(`Frame index not found: ${index}`)),
       delta:

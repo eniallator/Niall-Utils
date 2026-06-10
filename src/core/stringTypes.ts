@@ -103,3 +103,21 @@ export type StringExtract<
       >
     : ""
   : "";
+
+export type StringSplit<
+  Target extends string,
+  Separator extends string,
+  Parts extends string[] = [],
+> = Target extends ""
+  ? Parts
+  : Target extends `${Separator}${infer Char}${infer Rest}`
+    ? StringSplit<Rest, Separator, [...Parts, Char]>
+    : Target extends `${infer Char}${infer Rest}`
+      ? StringSplit<
+          Rest,
+          Separator,
+          Parts extends [...infer Head, infer Tail]
+            ? [...Head, `${Extract<Tail, string>}${Char}`]
+            : [Char]
+        >
+      : never;

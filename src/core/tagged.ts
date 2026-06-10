@@ -1,9 +1,10 @@
-declare const Tag: unique symbol;
+declare const TagSymbol: unique symbol;
 
 export type Tagged<Type, Name extends string> = Type & {
-  [Tag]: { readonly type: Type; readonly name: Name };
+  [TagSymbol]: { readonly type: Type; readonly name: Name };
 };
-export type Untag<T extends Tagged<unknown, string>> = T[typeof Tag]["type"];
+export type Untag<T extends Tagged<unknown, string>> =
+  T[typeof TagSymbol]["type"];
 
 export const unsafeTag =
   <T extends Tagged<unknown, string>>() =>
