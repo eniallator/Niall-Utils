@@ -23,10 +23,43 @@ export type Increment<N extends number> = Extract<
   number
 >;
 
-export type Add<A extends number, B extends number> = [
-  ...FillTuple<unknown, A>,
-  ...FillTuple<unknown, B>,
-]["length"];
+export type Add<A extends number, B extends number> = Extract<
+  [...FillTuple<unknown, A>, ...FillTuple<unknown, B>]["length"],
+  number
+>;
+
+export type Multiply<
+  A extends number,
+  B extends number,
+  I extends number = 1,
+> = I extends RecursionLimit
+  ? number
+  : I extends B
+    ? A
+    : Add<A, Multiply<A, B, Increment<I>>>;
+
+interface DigitLookup {
+  "0": 0;
+  "1": 1;
+  "2": 2;
+  "3": 3;
+  "4": 4;
+  "5": 5;
+  "6": 6;
+  "7": 7;
+  "8": 8;
+  "9": 9;
+}
+
+export type StringToNumber<
+  Str extends string,
+  Acc extends number = 0,
+> = Str extends `${infer Digit}${infer Rest}`
+  ? StringToNumber<
+      Rest,
+      Add<DigitLookup[Extract<Digit, keyof DigitLookup>], Multiply<Acc, 10>>
+    >
+  : Acc;
 
 export type Subtract<
   A extends number,
