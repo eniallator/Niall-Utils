@@ -11,3 +11,5 @@ export type FillTuple<
   : A["length"] extends N
     ? A
     : FillTuple<T, N, [...A, T]>;
+
+export type NonEmptyArray<A extends unknown[]> = [A[number], ...A];
