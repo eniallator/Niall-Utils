@@ -110,12 +110,16 @@ export type StringSplit<
   Parts extends string[] = [],
 > = Target extends ""
   ? Parts
-  : Parts extends [...infer Head, ""]
+  : Separator extends ""
     ? Target extends `${infer Char}${infer Rest}`
-      ? StringSplit<Rest, Separator, [...Extract<Head, string[]>, Char]>
+      ? StringSplit<Rest, Separator, [...Parts, Char]>
       : never
     : Target extends `${Separator}${infer Rest}`
-      ? StringSplit<Rest, Separator, [...Parts, ""]>
+      ? StringSplit<
+          Rest,
+          Separator,
+          Parts extends [string, ...string[]] ? [...Parts, ""] : ["", ""]
+        >
       : Target extends `${infer Char}${infer Rest}`
         ? StringSplit<
             Rest,
