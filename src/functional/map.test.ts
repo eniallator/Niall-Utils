@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { mapAccumulate, mapFilter, mapFind } from "./map";
-import { Option } from "./option";
+import { mapAccumulate, mapFilter, mapFind } from "./map.ts";
+import { Option } from "./option.ts";
 
 describe("mapFilter", () => {
   it("maps and filters out null/undefined", () => {

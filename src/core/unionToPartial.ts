@@ -17,13 +17,19 @@ type UnionToPartialRecurse<
  * Lets you destructure types where keys only appear in _some_ of the cases.
  *
  * Consider the following:
+ * ```ts
  * type Test = { a: string } | { b: number };
  * const obj: Test = {a: "foo"};
+ * ```
  *
  * Normally the following will type error saying that the properties aren't defined:
+ * ```ts
  * const {a, b} = obj;
+ * ```
  *
- * However this will not, as it will make Test equivalent to ({ a: string; b: undefined } | { a: undefined; b: number }):
+ * However this will not, as it will make Test equivalent to `({ a: string; b: undefined } | { a: undefined; b: number })`:
+ * ```ts
  * const {a, b} = obj as UnionToPartial<Test>;
+ * ```
  */
 export type UnionToPartial<T> = UnionToPartialRecurse<UnionToTuple<T>>;

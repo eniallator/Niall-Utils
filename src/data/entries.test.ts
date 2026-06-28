@@ -8,7 +8,7 @@ import {
   typedFromEntries,
   typedKeys,
   typedToEntries,
-} from "./entries";
+} from "./entries.ts";
 
 describe("typedKeys", () => {
   it("returns string keys by default", () => {

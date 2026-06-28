@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { asyncThrottled, throttled } from "./throttled";
+import { throttledAsync, throttled } from "./throttled.ts";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -63,13 +63,13 @@ describe("throttled", () => {
   });
 });
 
-describe("asyncThrottled", () => {
+describe("throttledAsync", () => {
   it("awaits the async function and caches the resolved value inside the throttle window", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: number) => Promise.resolve(value * 3));
-    const wrapped = asyncThrottled(fn, 100, 0);
+    const wrapped = throttledAsync(fn, 100, 0);
 
     vi.setSystemTime(1);
     expect(await wrapped(2)).toBe(6);
@@ -85,7 +85,7 @@ describe("asyncThrottled", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: string) => Promise.resolve(`${value}!`));
-    const wrapped = asyncThrottled(fn, 100, "initial");
+    const wrapped = throttledAsync(fn, 100, "initial");
 
     vi.setSystemTime(1);
     expect(await wrapped("go")).toBe("go!");
@@ -102,7 +102,7 @@ describe("asyncThrottled", () => {
 
     const error = new Error("boom");
     const fn = vi.fn(() => Promise.reject<string>(error));
-    const wrapped = asyncThrottled(fn, 100, "initial");
+    const wrapped = throttledAsync(fn, 100, "initial");
 
     vi.setSystemTime(1);
     await expect(wrapped()).rejects.toThrow(error);

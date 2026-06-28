@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { dom } from "./dom";
+import { dom } from "./dom.ts";
 
 describe("dom.addListener", () => {
   it("should add an event listener and call it", () => {

@@ -2,11 +2,11 @@ import { raise } from "../core/utils.ts";
 
 import type {
   Alphabet,
-  StringEat,
-  StringExtract,
-  StringGet,
+  Capture,
+  MatchString,
+  Skip,
   Whitespace,
-} from "../core/stringInfer.ts";
+} from "../core/stringTypes.ts";
 
 const addListener = <
   E extends HTMLElement,
@@ -37,21 +37,15 @@ const toAttrs = (
     .map(([key, val]) => (val != null ? `${key}="${val}"` : key))
     .join(" ");
 
-type ExtractElement<S extends string> = StringExtract<
-  S,
-  [
-    StringEat<Whitespace>,
-    StringEat<"<", 1>,
-    StringEat<Whitespace>,
-    StringGet<Alphabet>,
-  ]
->;
-
-type ToElement<S extends string> = S extends keyof HTMLElementTagNameMap
-  ? HTMLElementTagNameMap[S]
-  : HTMLElement;
-
-type InferElement<S extends string> = ToElement<Lowercase<ExtractElement<S>>>;
+type InferElement<S extends string> =
+  MatchString<
+    Lowercase<S>,
+    [Skip<Whitespace>, Skip<"<", 1>, Skip<Whitespace>, Capture<Alphabet>]
+  > extends infer Result
+    ? Result extends keyof HTMLElementTagNameMap
+      ? HTMLElementTagNameMap[Result]
+      : HTMLElement
+    : never;
 
 const toHtml = <const S extends string>(str: S): InferElement<S> => {
   const el = document.createElement("template");

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatLocaleDate } from "./formatLocaleDate";
+import { formatLocaleDate } from "./formatLocaleDate.ts";
 
 describe("formatLocaleDate", () => {
   it("formats single-digit months and days correctly", () => {

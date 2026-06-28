@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { Monad } from "./monad";
+
+import { Monad } from "./monad.ts";
 
 describe("Monad", () => {
   // --- Static constructors ---

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { slidingWindow } from "./slidingWindow";
+import { slidingWindow } from "./slidingWindow.ts";
 
 describe("slidingWindow", () => {
   it("produces circular sliding windows with default options", () => {

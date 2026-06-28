@@ -1,25 +1,25 @@
 import { describe, expect, it } from "vitest";
 
-import { multiSequence, sequence, timeSequence } from "./animate";
+import { multiSequence, sequence, timeSequence } from "./animate.ts";
 
 describe("sequence", () => {
   it("returns the correct frame and delta for a looping sequence", () => {
     const seq = sequence(["a", "b", "c"], 100, true);
 
-    expect(seq(0)).toEqual({ frame: "a", delta: 0 });
-    expect(seq(50)).toEqual({ frame: "a", delta: 0.5 });
-    expect(seq(100)).toEqual({ frame: "b", delta: 0 });
-    expect(seq(250)).toEqual({ frame: "c", delta: 0.5 });
-    expect(seq(300)).toEqual({ frame: "a", delta: 0 });
+    expect(seq(0)).toEqual({ frame: "a", delta: 0, index: 0 });
+    expect(seq(50)).toEqual({ frame: "a", delta: 0.5, index: 0 });
+    expect(seq(100)).toEqual({ frame: "b", delta: 0, index: 1 });
+    expect(seq(250)).toEqual({ frame: "c", delta: 0.5, index: 2 });
+    expect(seq(300)).toEqual({ frame: "a", delta: 0, index: 0 });
   });
 
   it("caps to the last frame when loop is false", () => {
     const seq = sequence(["x", "y"], 100, false);
 
-    expect(seq(0)).toEqual({ frame: "x", delta: 0 });
-    expect(seq(199)).toEqual({ frame: "y", delta: 0.99 });
-    expect(seq(200)).toEqual({ frame: "y", delta: 1 });
-    expect(seq(999)).toEqual({ frame: "y", delta: 1 });
+    expect(seq(0)).toEqual({ frame: "x", delta: 0, index: 0 });
+    expect(seq(199)).toEqual({ frame: "y", delta: 0.99, index: 1 });
+    expect(seq(200)).toEqual({ frame: "y", delta: 1, index: 1 });
+    expect(seq(999)).toEqual({ frame: "y", delta: 1, index: 1 });
   });
 });
 
@@ -29,7 +29,7 @@ describe("timeSequence", () => {
     const now = new Date(2026, 0, 1, 0, 0, 0, 150);
     const seq = timeSequence([1, 2, 3], 100, true, start);
 
-    expect(seq(now)).toEqual({ frame: 2, delta: 0.5 });
+    expect(seq(now)).toEqual({ frame: 2, delta: 0.5, index: 1 });
   });
 
   it("defaults now when no date is provided", () => {
@@ -67,8 +67,8 @@ describe("multiSequence", () => {
   it("uses total values when temporal is false", () => {
     const multi = multiSequence(sequences, 100, "red", false);
 
-    expect(multi("red", 150)).toEqual({ frame: "r2", delta: 0.5 });
-    expect(multi("blue", 250)).toEqual({ frame: "b3", delta: 0.5 });
+    expect(multi("red", 150)).toEqual({ frame: "r2", delta: 0.5, index: 1 });
+    expect(multi("blue", 250)).toEqual({ frame: "b3", delta: 0.5, index: 2 });
   });
 
   it("throws when non-temporal is called without a total argument", () => {

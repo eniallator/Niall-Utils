@@ -18,7 +18,7 @@ export const throttled = <Fn extends AnyArgFn>(
   }) as Fn;
 };
 
-export const asyncThrottled = <Fn extends AnyArgFn<Promise<unknown>>>(
+export const throttledAsync = <Fn extends AnyArgFn<Promise<unknown>>>(
   fn: Fn,
   throttleMs: number,
   initial: AsyncReturnType<Fn>

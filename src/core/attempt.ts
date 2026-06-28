@@ -8,14 +8,14 @@ export function attempt<T>(unsafeCb: () => T, onError?: () => T): T | null {
   }
 }
 
-export async function asyncAttempt<T>(
+export async function attemptAsync<T>(
   unsafeCb: () => Promise<T>
 ): Promise<T | null>;
-export async function asyncAttempt<T>(
+export async function attemptAsync<T>(
   unsafeCb: () => Promise<T>,
   onError: () => T
 ): Promise<T>;
-export async function asyncAttempt<T>(
+export async function attemptAsync<T>(
   unsafeCb: () => Promise<T>,
   onError?: () => T
 ): Promise<T | null> {

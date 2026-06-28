@@ -1,3 +1,4 @@
+export * from "./attempt.ts";
 export * from "./stringTypes.ts";
 export * from "./tagged.ts";
 export * from "./tuple.ts";

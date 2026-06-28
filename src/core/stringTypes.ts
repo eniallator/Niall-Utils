@@ -1,4 +1,4 @@
-import type { Decrement } from "../math/maths.ts";
+import type { Increment } from "../math/maths.ts";
 
 export type Whitespace = " " | "\t" | "\n" | "\r";
 export type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
@@ -32,100 +32,126 @@ export type AlphabetLower =
 export type AlphabetUpper = Uppercase<AlphabetLower>;
 export type Alphabet = AlphabetLower | AlphabetUpper;
 
-interface BaseOperation<C extends string, N extends number | null> {
-  charset: C;
-  count: N;
-}
+type Quantifier = number | "0+" | "1+";
 
-export interface StringGet<
-  C extends string,
-  N extends number | null = null,
-> extends BaseOperation<C, N> {
-  type: "get";
-}
-
-export interface StringEat<
-  C extends string,
-  N extends number | null = null,
-> extends BaseOperation<C, N> {
-  type: "eat";
-}
-
-export type StringOperation<C extends string, N extends number | null> =
-  | StringGet<C, N>
-  | StringEat<C, N>;
-
-interface OutputData<
-  O extends string,
-  R extends string,
-  N extends boolean = false,
+export interface Match<
+  Charset extends string,
+  Q extends Quantifier,
+  Capture extends boolean,
 > {
-  out: O;
-  rest: R;
-  noMatch: N;
+  charset: Charset;
+  quantifier: Q;
+  capture: Capture;
 }
 
-type CombineOperationOutput<
-  O extends string,
-  R extends OutputData<string, string, boolean>,
-> = OutputData<`${O}${R["out"]}`, R["rest"], R["noMatch"]>;
+export type AnyMatch = Match<string, Quantifier, boolean>;
 
-type ApplyStringOperation<
-  S extends string,
-  O extends StringOperation<string, number | null>,
-  N extends number | null = O["count"],
-> = S extends `${infer C}${infer R}`
-  ? C extends O["charset"]
-    ? N extends 0
-      ? OutputData<"", S>
-      : CombineOperationOutput<
-          O["type"] extends "get" ? C : "",
-          ApplyStringOperation<R, O, N extends number ? Decrement<N> : N>
+export type Capture<C extends string, Q extends Quantifier = "0+"> = Match<
+  C,
+  Q,
+  true
+>;
+export type Skip<C extends string, Q extends Quantifier = "0+"> = Match<
+  C,
+  Q,
+  false
+>;
+
+export interface ParserError<
+  Reason extends string,
+  Rest extends string,
+  M extends AnyMatch,
+> {
+  reason: Reason;
+  failedAt: Rest extends "" ? "<END OF STRING>" : `"${Rest}"`;
+  expected: { charset: M["charset"]; quantifier: M["quantifier"] };
+}
+
+interface ParserState {
+  out: string;
+  rest: string;
+}
+
+type CombineState<
+  Current extends ParserState,
+  Next extends ParserState | ParserError<string, string, AnyMatch>,
+> = Next extends ParserState
+  ? { out: `${Current["out"]}${Next["out"]}`; rest: Next["rest"] }
+  : Next;
+
+type ApplyMatch<
+  Str extends string,
+  M extends AnyMatch,
+  Q extends Quantifier = M["quantifier"],
+  Idx extends number = 0,
+> = Idx extends Q
+  ? { out: ""; rest: Str }
+  : Str extends `${infer Head}${infer Tail}`
+    ? Head extends M["charset"]
+      ? CombineState<
+          { out: M["capture"] extends true ? Head : ""; rest: Tail },
+          ApplyMatch<Tail, M, Q, Increment<Idx>>
         >
-    : OutputData<"", S, N extends null | 0 ? false : true>
-  : OutputData<"", "">;
+      : Q extends "0+"
+        ? { out: ""; rest: Str }
+        : Q extends "1+"
+          ? Idx extends 0
+            ? ParserError<"Expected quantifier '1+' but found no match", Str, M>
+            : { out: ""; rest: Str }
+          : ParserError<`Expected exact match. Found: ${Idx} / ${Q}`, Str, M>
+    : Q extends 0 | "0+"
+      ? { out: ""; rest: "" }
+      : Q extends "1+"
+        ? Idx extends 0
+          ? ParserError<"Expected at least one match for '1+'", "", M>
+          : { out: ""; rest: "" }
+        : ParserError<"Exact match count not be satisfied", "", M>;
 
-type RecurseExtract<
-  C extends OutputData<string, string, boolean>,
-  A extends StringOperation<string, number | null>[],
-> = C["noMatch"] extends true
-  ? ""
-  : `${C["out"]}${StringExtract<C["rest"], A>}`;
+type ParseTokens<
+  Str extends string,
+  Tokens extends AnyMatch[],
+> = Tokens extends [infer Head, ...infer Tail]
+  ? ApplyMatch<Str, Extract<Head, AnyMatch>> extends infer Result
+    ? Result extends ParserState
+      ? CombineState<
+          Result,
+          ParseTokens<Result["rest"], Extract<Tail, AnyMatch[]>>
+        >
+      : Result
+    : never
+  : { out: ""; rest: Str };
 
-export type StringExtract<
-  S extends string,
-  A extends StringOperation<string, number | null>[],
-> = A extends [infer O, ...infer R]
-  ? O extends StringOperation<string, number | null>
-    ? RecurseExtract<
-        ApplyStringOperation<S, O>,
-        Extract<R, StringOperation<string, number | null>[]>
-      >
-    : ""
-  : "";
+export type MatchString<Str extends string, Tokens extends AnyMatch[]> =
+  ParseTokens<Str, Tokens> extends infer Result
+    ? Result extends ParserState
+      ? Result["out"]
+      : Result
+    : never;
 
-export type StringSplit<
-  Target extends string,
-  Separator extends string,
+type StringChars<Str extends string> = Str extends `${infer Char}${infer Rest}`
+  ? [Char, ...StringChars<Rest>]
+  : [];
+
+type StringSplitNonEmpty<
+  Str extends string,
+  Sep extends string,
   Parts extends string[] = [],
-> = Target extends ""
-  ? Parts
-  : Separator extends ""
-    ? Target extends `${infer Char}${infer Rest}`
-      ? StringSplit<Rest, Separator, [...Parts, Char]>
-      : never
-    : Target extends `${Separator}${infer Rest}`
-      ? StringSplit<
-          Rest,
-          Separator,
-          Parts extends [string, ...string[]] ? [...Parts, ""] : ["", ""]
-        >
-      : Target extends `${infer Char}${infer Rest}`
-        ? StringSplit<
-            Rest,
-            Separator,
-            Parts extends [...infer Head, infer Tail]
-              ? [...Head, `${Extract<Tail, string>}${Char}`]
-              : [Char]
-          >
-        : never;
+> = Str extends `${Sep}${infer Rest}`
+  ? StringSplitNonEmpty<
+      Rest,
+      Sep,
+      Parts extends [string, ...string[]] ? [...Parts, ""] : ["", ""]
+    >
+  : Str extends `${infer Char}${infer Rest}`
+    ? StringSplitNonEmpty<
+        Rest,
+        Sep,
+        Parts extends [...infer Head, infer Tail]
+          ? [...Head, `${Extract<Tail, string>}${Char}`]
+          : [Char]
+      >
+    : Parts;
+
+export type StringSplit<Str extends string, Sep extends string> = Sep extends ""
+  ? StringChars<Str>
+  : StringSplitNonEmpty<Str, Sep>;
