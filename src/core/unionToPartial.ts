@@ -6,7 +6,7 @@ type DeepKeys<T extends readonly unknown[]> = {
 
 type UnionToPartialRecurse<
   T extends readonly unknown[],
-  K extends string | number | symbol = DeepKeys<T>,
+  K extends PropertyKey = DeepKeys<T>,
 > = T extends [infer A, ...infer B]
   ?
       | (Partial<Record<Exclude<K, keyof A>, undefined>> & A)

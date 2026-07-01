@@ -58,23 +58,25 @@ describe("mapFind", () => {
 describe("mapAccumulate", () => {
   it("accumulates state while mapping values", () => {
     const arr = [1, 2, 3, 4];
-    const result = mapAccumulate(arr, 0, (acc, value) => [
-      acc + value,
-      acc + value,
-    ]);
+    const result = mapAccumulate(
+      arr,
+      (acc, value) => [acc + value, acc + value],
+      0
+    );
     expect(result).toEqual([1, 3, 6, 10]);
   });
 
   it("passes index and array into the callback", () => {
     const arr = [10, 20, 30];
-    const result = mapAccumulate(arr, 0, (acc, value, index, values) => [
-      acc + value,
-      `${index}:${values.length}`,
-    ]);
+    const result = mapAccumulate(
+      arr,
+      (acc, value, index, values) => [acc + value, `${index}:${values.length}`],
+      0
+    );
     expect(result).toEqual(["0:3", "1:3", "2:3"]);
   });
 
   it("returns an empty array for empty input", () => {
-    expect(mapAccumulate([], 5, () => [0, "ignored"])).toEqual([]);
+    expect(mapAccumulate([], () => [0, "ignored"], 5)).toEqual([]);
   });
 });

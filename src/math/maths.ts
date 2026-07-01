@@ -1,4 +1,5 @@
 import { tuple } from "../core/tuple.ts";
+import { simplePipeable } from "../functional/pipeable.ts";
 
 import type { FillTuple } from "../core/tuple.ts";
 
@@ -8,10 +9,13 @@ export const cartesianToPolar = (x: number, y: number) =>
 export const polarToCartesian = (magnitude: number, angle: number) =>
   tuple(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
 
-export const positiveMod = (a: number, b: number) => ((a % b) + b) % b;
+export const positiveMod = simplePipeable(
+  (a: number, b: number) => ((a % b) + b) % b
+);
 
-export const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
+export const clamp = simplePipeable((value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max)
+);
 
 export type RecursionLimit = 1001;
 

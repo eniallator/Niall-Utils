@@ -28,10 +28,14 @@ export const createWeightedGradient = (
 ): ((colorPercent: number) => string) => {
   const totalWeight = gradient.reduce((acc, row) => acc + row[1], 0);
 
-  const percentWeights = mapAccumulate(gradient, 0, (acc, [color, weight]) => {
-    const currWeight = acc + weight / totalWeight;
-    return [currWeight, tuple(color, currWeight)];
-  });
+  const percentWeights = mapAccumulate(
+    gradient,
+    (acc, [color, weight]) => {
+      const currWeight = acc + weight / totalWeight;
+      return [currWeight, tuple(color, currWeight)];
+    },
+    0
+  );
 
   const relevantWeights = slidingWindow(percentWeights, 3, 1, -1);
 
