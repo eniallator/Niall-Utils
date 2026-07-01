@@ -17,7 +17,7 @@ export const base64FromUint = (n: number, length?: number): Base64 => {
   if (Number.isNaN(n) || n < 0) raise(new Error(`Expected uint but got ${n}`));
   let base64 = "";
   while (n && (length == null || base64.length < length)) {
-    base64 = (BASE_64_CHARS[n % 64] ?? "") + base64;
+    base64 = (BASE_64_CHARS[n % 64] as string) + base64;
     n = Math.floor(n / 64);
   }
   return unsafeBase64(

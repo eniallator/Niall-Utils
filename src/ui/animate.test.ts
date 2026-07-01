@@ -21,6 +21,11 @@ describe("sequence", () => {
     expect(seq(200)).toEqual({ frame: "y", delta: 1, index: 1 });
     expect(seq(999)).toEqual({ frame: "y", delta: 1, index: 1 });
   });
+
+  it("throws when frames array is empty", () => {
+    const seq = sequence([], 100, true);
+    expect(() => seq(0)).toThrow("Frame index not found: NaN");
+  });
 });
 
 describe("timeSequence", () => {
@@ -76,5 +81,32 @@ describe("multiSequence", () => {
     expect(() => (multi as (arg: string) => unknown)("red")).toThrow(
       "multiSequences need a total argument passed in"
     );
+  });
+
+  it("throws when initial sequence does not exist", () => {
+    const seqData = { red: ["r1", "r2"] };
+    expect(() => multiSequence(seqData, 100, "blue" as keyof typeof seqData))
+      .toThrow("Sequence not found blue");
+  });
+
+  it("throws when switching to a non-existent target sequence", () => {
+    const multi = multiSequence(sequences, 100, "red", true);
+    const now = new Date();
+
+    // First call establishes 'red' as last
+    multi("red", now);
+
+    // Switching to a non-existent sequence should throw
+    expect(() => multi("green" as keyof typeof sequences, now)).toThrow(
+      "Sequence not found green"
+    );
+  });
+
+  it("passes number arg correctly when switching sequences (non-Date branch)", () => {
+    const multi = multiSequence(sequences, 100, "red", false);
+
+    // Switch from red to blue with a numeric arg — exercises the
+    // arg instanceof Date ? arg : undefined false branch
+    expect(multi("blue", 250)).toEqual({ frame: "b3", delta: 0.5, index: 2 });
   });
 });

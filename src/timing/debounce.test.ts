@@ -65,4 +65,16 @@ describe("debounce", () => {
     vi.advanceTimersByTime(100);
     expect(fn).toHaveBeenCalledExactlyOnceWith(1, "two", { three: true });
   });
+
+  it("should be safe to cancel when timer is already null", () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced("first");
+    vi.advanceTimersByTime(100);
+    expect(fn).toHaveBeenCalledOnce();
+
+    // After the timer fires, timer is null — cancel should be safe
+    debounced.cancel();
+  });
 });

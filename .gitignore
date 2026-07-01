@@ -7,3 +7,4 @@ dist
 .pnp.loader.mjs
 .devcontainer/devcontainer-lock.json
 .devcontainer/devcontainer.json
+coverage

@@ -3,7 +3,7 @@
   "version": "1.5.0",
   "description": "Small collection of my web utilities",
   "author": "eniallator",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eniallator/Niall-Utils.git"
@@ -52,6 +52,7 @@
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
+    "@vitest/coverage-v8": "4.1.6",
     "eslint": "^10.4.0",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",

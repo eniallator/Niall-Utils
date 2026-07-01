@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   filterObject,
   mapObject,
+  mapRecord,
   omit,
   pick,
   typedFromEntries,
@@ -133,5 +134,31 @@ describe("omit", () => {
 
   it("returns original object for empty keys array", () => {
     expect(omit({ a: 1 }, [])).toEqual({ a: 1 });
+  });
+});
+
+describe("mapRecord", () => {
+  it("maps entries to a new record", () => {
+    const result = mapRecord({ a: 1, b: 2 }, ([k, v]) => [k, v * 2]);
+    expect(result).toEqual({ a: 2, b: 4 });
+  });
+
+  it("can change keys and values", () => {
+    const result = mapRecord({ a: 1 }, () => ["b" as const, 5]);
+    expect(result).toEqual({ b: 5 });
+  });
+
+  it("returns empty record for empty input", () => {
+    expect(mapRecord({}, ([k, v]) => [k, v])).toEqual({});
+  });
+
+  it("works with symbol keys when includeSymbols is true", () => {
+    const sym = Symbol("s");
+    const result = mapRecord(
+      { a: 1, [sym]: 2 } as Record<string | symbol, number>,
+      ([k, v]) => [String(k), v * 2],
+      true
+    );
+    expect(result).toHaveProperty("a", 2);
   });
 });

@@ -6,5 +6,18 @@ export default defineConfig({
     isolate: true,
     passWithNoTests: true,
     environment: "jsdom",
+    coverage: {
+      enabled: true,
+      reporter: ["text-summary"],
+      include: ["src/**/*"],
+      thresholds: {
+        statements: 100,
+        functions: 100,
+        branches: 100,
+        lines: 100,
+        perFile: true,
+        autoUpdate: true,
+      },
+    },
   },
 });

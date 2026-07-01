@@ -39,21 +39,6 @@ export const mapObject = <I extends object, O extends object>(
   includeSymbols: boolean = false
 ): O => typedFromEntries(typedToEntries(obj, includeSymbols).map(mapper));
 
-export const mapRecord = <
-  R extends Record<PropertyKey, unknown>,
-  K extends PropertyKey,
-  V,
->(
-  rec: R,
-  mapper: (
-    entry: Entry<R>,
-    index: number,
-    array: readonly Entry<R>[]
-  ) => [K, V],
-  includeSymbols: boolean = false
-): Record<K, V> =>
-  typedFromEntries(typedToEntries(rec, includeSymbols).map(mapper));
-
 export const filterObject = <O extends object>(
   obj: O,
   predicate: (
@@ -63,6 +48,38 @@ export const filterObject = <O extends object>(
   ) => boolean,
   includeSymbols: boolean = false
 ) => typedFromEntries(typedToEntries(obj, includeSymbols).filter(predicate));
+
+export const mapRecord = pipeable<{
+  <R extends Record<PropertyKey, unknown>, K extends PropertyKey, V>(
+    rec: R,
+    mapper: (
+      entry: Entry<R>,
+      index: number,
+      array: readonly Entry<R>[]
+    ) => [K, V],
+    includeSymbols?: boolean
+  ): Record<K, V>;
+  <R extends Record<PropertyKey, unknown>, K extends PropertyKey, V>(
+    mapper: (
+      entry: Entry<R>,
+      index: number,
+      array: readonly Entry<R>[]
+    ) => [K, V],
+    includeSymbols?: boolean
+  ): (rec: R) => Record<K, V>;
+}>(
+  <R extends Record<PropertyKey, unknown>, K extends PropertyKey, V>(
+    rec: R,
+    mapper: (
+      entry: Entry<R>,
+      index: number,
+      array: readonly Entry<R>[]
+    ) => [K, V],
+    includeSymbols: boolean = false
+  ): Record<K, V> =>
+    typedFromEntries(typedToEntries(rec, includeSymbols).map(mapper)),
+  ([first]) => typeof first === "object"
+);
 
 export const pick = pipeable<{
   <O extends object, K extends keyof O>(
