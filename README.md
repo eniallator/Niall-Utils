@@ -158,7 +158,7 @@ import { formatLocaleDate } from "niall-utils/format";
 | Node.js     | >= 20                         |
 | Browsers    | All modern browsers (ES2020+) |
 
-**Note:** The `ui/dom` module depends on browser DOM APIs and will not work in Node.js environments without a DOM polyfill (e.g., `jsdom`).
+**Note:** The `ui/dom` module depends on browser DOM APIs and will not work in Node.js environments without a DOM polyfill (e.g., `happy-dom`).
 
 ## Contributing
 

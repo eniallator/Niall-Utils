@@ -5,7 +5,7 @@ export default defineConfig({
     watch: false,
     isolate: true,
     passWithNoTests: true,
-    environment: "jsdom",
+    environment: "happy-dom",
     coverage: {
       enabled: true,
       reporter: ["text-summary"],
