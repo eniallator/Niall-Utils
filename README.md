@@ -2,32 +2,33 @@
 
 Small collection of my utilities: DOM helpers, functional utilities, small math helpers, safe guards, and tiny data structures.
 
-## Overview
+[![npm version](https://img.shields.io/npm/v/niall-utils.svg)](https://www.npmjs.com/package/niall-utils)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CI](https://github.com/eniallator/Niall-Utils/actions/workflows/ci.yml/badge.svg)](https://github.com/eniallator/Niall-Utils/actions/workflows/ci.yml)
+[![Node.js >= 20](https://img.shields.io/badge/Node.js-%3E=20-brightgreen.svg)](https://nodejs.org/)
 
-- **Purpose:** Provide a tiny, well-typed toolkit of primitives to be used by other packages: DOM creation/selection, tuple utilities, safe guards, functional helpers, encoding utilities and small math helpers.
-- **Design:** Small, single-purpose functions with strong TypeScript ergonomics and unit tests.
+## Installation
 
-## Local Dev Container Configuration
+```bash
+npm install niall-utils
+# or
+yarn add niall-utils
+# or
+pnpm add niall-utils
+```
 
-This repository includes an example devcontainer configuration to help new contributors get started quickly.
+## Table of Contents
 
-- **Example file:** `.devcontainer/devcontainer.example.json` — a sane default for this project (committed).
-- **Your personal config:** Copy the example to `.devcontainer/devcontainer.json` and customize it for your environment. The local `devcontainer.json` is intended to be kept private and should not be committed.
+- [Installation](#installation)
+- [Quick Example](#quick-example)
+- [API Summary](#api-summary)
+- [Subpath Imports](#subpath-imports)
+- [Compatibility](#compatibility)
+- [Tests](#tests)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Getting started
-
-1. Copy the example into your local devcontainer file:
-
-  ```bash
-  cp .devcontainer/devcontainer.example.json .devcontainer/devcontainer.json
-  ```
-
-1. Edit `.devcontainer/devcontainer.json` to add any personal extensions or settings you need.
-2. In VS Code run `Dev Containers: Rebuild Container` (or `Reopen in Container`) to apply the configuration.
-
-> **Note:** If you update your local `.devcontainer/devcontainer.json`, rebuild the container for changes to take effect.
-
-## Quick example
+## Quick Example
 
 ```typescript
 import { dom, raise, cartesianToPolar, tuple } from "niall-utils";
@@ -134,9 +135,34 @@ try {
 
 - Unit tests live next to implementation files (`*.test.ts`) and cover edge cases and typing behavior. Run workspace tests via the root `package.json` scripts.
 
+## Subpath Imports
+
+This package supports tree-shakeable subpath imports. You can import from individual modules without pulling in the entire library:
+
+```typescript
+// Individual modules
+import { debounce } from "niall-utils/timing";
+import { collectPaginated } from "niall-utils/data";
+import { base64FromUint } from "niall-utils/encoding";
+import { Monad, Option } from "niall-utils/functional";
+import { cartesianToPolar, clamp } from "niall-utils/math";
+import { dom, animate, color } from "niall-utils/ui";
+import { raise, Tagged, unsafeTag } from "niall-utils/core";
+import { formatLocaleDate } from "niall-utils/format";
+```
+
+## Compatibility
+
+| Environment | Supported Versions            |
+| ----------- | ----------------------------- |
+| Node.js     | >= 20                         |
+| Browsers    | All modern browsers (ES2020+) |
+
+**Note:** The `ui/dom` module depends on browser DOM APIs and will not work in Node.js environments without a DOM polyfill (e.g., `jsdom`).
+
 ## Contributing
 
-- Add small, well-tested functions only. Follow the README Markdown style and ensure tests accompany new helpers.
+Please see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details on how to contribute to this project.
 
 ## License
 
