@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-07-02
+
+### Added
+
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`)
+- Coverage reporting with `@vitest/coverage-v8` and 100% threshold
+- Subpath exports for all modules (`core`, `data`, `encoding`, `format`, `functional`, `math`, `timing`, `ui`)
+- `CHANGELOG.md` following Keep a Changelog format
+- `.versionrc.json` configuration for standard-version
+- `standard-version` as a dev dependency for automated releases
+
+### Changed
+
+- Replaced `jsdom` with `happy-dom` as the test environment for improved compatibility and performance
+- Bumped Yarn to 4.17.0
+- Improved README with badges, installation instructions, table of contents, and compatibility section
+- Updated contributing section to reference `CONTRIBUTING.md`
+- Simplified release flow using standard-version
+
+### Fixed
+
+- CI pipeline for Node.js 20+ with Yarn PnP issues resolved
+- Release script flow
+
 ## [1.5.0] - 2026-07-02
 
 ### Added
