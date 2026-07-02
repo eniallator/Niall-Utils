@@ -10,8 +10,12 @@ const BASE_64_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 const BASE_64_CHARSET = new Set(BASE_64_CHARS);
 
-export const isValidBase64 = (str: string): str is Base64 =>
-  str[Symbol.iterator]().every(char => BASE_64_CHARSET.has(char));
+export const isValidBase64 = (str: string): str is Base64 => {
+  for (const char of str) {
+    if (!BASE_64_CHARSET.has(char)) return false;
+  }
+  return true;
+};
 
 export const base64FromUint = (n: number, length?: number): Base64 => {
   if (Number.isNaN(n) || n < 0) raise(new Error(`Expected uint but got ${n}`));
