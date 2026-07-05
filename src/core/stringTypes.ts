@@ -1,7 +1,10 @@
 import type { Increment } from "../math/maths.ts";
 
+/** A single whitespace character. */
 export type Whitespace = " " | "\t" | "\n" | "\r";
+/** A single decimal digit character. */
 export type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+/** A single lowercase Latin letter character. */
 export type AlphabetLower =
   | "a"
   | "b"
@@ -29,11 +32,19 @@ export type AlphabetLower =
   | "x"
   | "y"
   | "z";
+/** A single uppercase Latin letter character. */
 export type AlphabetUpper = Uppercase<AlphabetLower>;
+/** A single Latin letter character, either case. */
 export type Alphabet = AlphabetLower | AlphabetUpper;
 
 type Quantifier = number | "0+" | "1+";
 
+/**
+ * A single match token used by {@link MatchString} to describe what to match against a string.
+ * @template Charset The union of characters that this token matches.
+ * @template Q How many characters to match: an exact count, `"0+"` for zero-or-more, or `"1+"` for one-or-more.
+ * @template Capture Whether the matched characters should be included in {@link MatchString}'s output.
+ */
 export interface Match<
   Charset extends string,
   Q extends Quantifier,
@@ -44,19 +55,36 @@ export interface Match<
   capture: Capture;
 }
 
+/** Any {@link Match} token, regardless of charset, quantifier, or capture flag. */
 export type AnyMatch = Match<string, Quantifier, boolean>;
 
+/**
+ * A {@link Match} token whose matched characters are captured into {@link MatchString}'s output.
+ * @template C The union of characters that this token matches.
+ * @template Q How many characters to match. Defaults to `"0+"`.
+ */
 export type Capture<C extends string, Q extends Quantifier = "0+"> = Match<
   C,
   Q,
   true
 >;
+/**
+ * A {@link Match} token whose matched characters are consumed but excluded from {@link MatchString}'s output.
+ * @template C The union of characters that this token matches.
+ * @template Q How many characters to match. Defaults to `"0+"`.
+ */
 export type Skip<C extends string, Q extends Quantifier = "0+"> = Match<
   C,
   Q,
   false
 >;
 
+/**
+ * The error shape produced by {@link MatchString} when a string doesn't satisfy a {@link Match} token.
+ * @template Reason Human-readable description of why matching failed.
+ * @template Rest The remaining, unmatched portion of the string at the point of failure.
+ * @template M The {@link Match} token that failed to match.
+ */
 export interface ParserError<
   Reason extends string,
   Rest extends string,
@@ -121,6 +149,12 @@ type ParseTokens<
     : never
   : { out: ""; rest: Str };
 
+/**
+ * Matches a string against a sequence of {@link Match} tokens, similar to a regex, and returns the concatenation
+ * of all captured sections. Resolves to a {@link ParserError} if `Str` doesn't satisfy `Tokens`.
+ * @template Str The string to match against.
+ * @template Tokens The sequence of {@link Match} tokens to apply in order.
+ */
 export type MatchString<Str extends string, Tokens extends AnyMatch[]> =
   ParseTokens<Str, Tokens> extends infer Result
     ? Result extends ParserState
@@ -152,6 +186,11 @@ type StringSplitNonEmpty<
       >
     : Parts;
 
+/**
+ * Splits a string type on a separator, similarly to `String.prototype.split`, producing a tuple of the parts.
+ * @template Str The string to split.
+ * @template Sep The separator to split on. When empty, splits into individual characters.
+ */
 export type StringSplit<Str extends string, Sep extends string> = Sep extends ""
   ? StringChars<Str>
   : StringSplitNonEmpty<Str, Sep>;

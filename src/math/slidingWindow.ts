@@ -3,6 +3,19 @@ import { positiveMod } from "./maths.ts";
 
 import type { FillTuple } from "../core/tuple.ts";
 
+/**
+ * Slides a fixed-size window over an array, returning a tuple for each window position. Pipeable: call as
+ * `slidingWindow(arr, windowSize, step?, start?, circular?)` or
+ * `slidingWindow(windowSize, step?, start?, circular?)(arr)`.
+ * @template T The type of the array's elements.
+ * @template S The window size.
+ * @param {readonly T[]} arr The array to slide over.
+ * @param {S} windowSize The number of elements in each window.
+ * @param {number} [step] How many elements to advance between windows. Defaults to `1`.
+ * @param {number} [start] The index to start the first window at (can be negative when `circular` is `true`). Defaults to `0`.
+ * @param {boolean} [circular] Whether windows wrap around past the end of the array back to the start. When `false`, the last window stops once it would run past the array's end. Defaults to `true`.
+ * @returns {FillTuple<T, S>[]} An array of fixed-length `windowSize` tuples, one per window position.
+ */
 export const slidingWindow = pipeable<{
   <T, S extends number>(
     arr: readonly T[],

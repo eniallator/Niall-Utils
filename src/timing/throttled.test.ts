@@ -9,7 +9,7 @@ afterEach(() => {
 describe("throttled", () => {
   it("calls fn on first invocation and returns the computed result", () => {
     const fn = vi.fn((value: number) => value * 2);
-    const wrapped = throttled(fn, 100, 0);
+    const wrapped = throttled(fn, 100);
 
     expect(wrapped(5)).toBe(10);
     expect(fn).toHaveBeenCalledTimes(1);
@@ -21,7 +21,7 @@ describe("throttled", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: number) => value * 2);
-    const wrapped = throttled(fn, 100, 0);
+    const wrapped = throttled(fn, 100);
 
     vi.setSystemTime(1);
     expect(wrapped(3)).toBe(6);
@@ -37,7 +37,7 @@ describe("throttled", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: number) => value + 1);
-    const wrapped = throttled(fn, 100, 0);
+    const wrapped = throttled(fn, 100);
 
     vi.setSystemTime(1);
     expect(wrapped(2)).toBe(3);
@@ -53,7 +53,7 @@ describe("throttled", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((a: string, b: string) => `${a}:${b}`);
-    const wrapped = throttled(fn, 0, "initial");
+    const wrapped = throttled(fn, 0);
 
     vi.setSystemTime(1);
     expect(wrapped("first", "call")).toBe("first:call");
@@ -69,7 +69,7 @@ describe("throttledAsync", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: number) => Promise.resolve(value * 3));
-    const wrapped = throttledAsync(fn, 100, 0);
+    const wrapped = throttledAsync(fn, 100);
 
     vi.setSystemTime(1);
     expect(await wrapped(2)).toBe(6);
@@ -85,7 +85,7 @@ describe("throttledAsync", () => {
     vi.setSystemTime(0);
 
     const fn = vi.fn((value: string) => Promise.resolve(`${value}!`));
-    const wrapped = throttledAsync(fn, 100, "initial");
+    const wrapped = throttledAsync(fn, 100);
 
     vi.setSystemTime(1);
     expect(await wrapped("go")).toBe("go!");
@@ -102,7 +102,7 @@ describe("throttledAsync", () => {
 
     const error = new Error("boom");
     const fn = vi.fn(() => Promise.reject<string>(error));
-    const wrapped = throttledAsync(fn, 100, "initial");
+    const wrapped = throttledAsync(fn, 100);
 
     vi.setSystemTime(1);
     await expect(wrapped()).rejects.toThrow(error);

@@ -1,5 +1,9 @@
 import type { AnyArgFn } from "../timing/helpers.ts";
 
+/**
+ * The call signature of {@link pipe}: takes an initial value followed by up to 20 unary functions, each fed
+ * the previous function's output, and returns the final result, fully typed at every step.
+ */
 export interface Pipe {
   <A>(data: A): A;
   <A, B = never>(data: A, ab: (_: A) => B): B;
@@ -529,6 +533,10 @@ export interface Pipe {
   ): U;
 }
 
+/**
+ * Pipes a value through a sequence of unary functions left-to-right, e.g. `pipe(x, f, g, h)` is equivalent
+ * to `h(g(f(x)))` but reads top-to-bottom instead of nesting.
+ */
 export const pipe = ((data: unknown, ...mappers: AnyArgFn[]) => {
   let out = data;
   for (const mapper of mappers) out = mapper(out);
