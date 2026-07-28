@@ -8,7 +8,7 @@
 export const formatLocaleDate = (
   date: Date,
   locale: Intl.LocalesArgument = "en-GB"
-) =>
+): string =>
   date
     .toLocaleString(locale)
     .replace(

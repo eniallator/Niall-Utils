@@ -65,7 +65,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.17.0",
+  "packageManager": "yarn@4.17.1",
   "scripts": {
     "test": "vitest run --passWithNoTests",
     "build": "tsc",
@@ -90,7 +90,7 @@
     "happy-dom": "^20.10.6",
     "prettier": "^3.8.3",
     "publint": "^0.3.21",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.59.4",
     "vitest": "^4.1.6"
   },

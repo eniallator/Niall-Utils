@@ -2,7 +2,7 @@ import { tuple } from "../core/tuple.ts";
 import { pipeable } from "../functional/pipeable.ts";
 
 /**
- * Returns an object's own enumerable keys, typed as `(keyof O)[]` instead of the widened `string[]`
+ * Returns an object's own keys, typed as `(keyof O)[]` instead of the widened `string[]`
  * that `Object.keys` returns. Pipeable: call as `typedKeys(obj, includeSymbols?)` or
  * `typedKeys(includeSymbols?)(obj)`.
  * @template O The type of the object being inspected.
@@ -165,7 +165,7 @@ export const pick = pipeable<{
     includeSymbols: boolean = false
   ): Pick<O, K> =>
     filterObject(obj, ([key]) => keys.includes(key as K), includeSymbols),
-  ([first]) => !Array.isArray(first)
+  ([a, b]) => typeof a === "object" && typeof b === "object"
 );
 
 /**
@@ -195,5 +195,5 @@ export const omit = pipeable<{
     includeSymbols: boolean = false
   ): Omit<O, K> =>
     filterObject(obj, ([key]) => !keys.includes(key as K), includeSymbols),
-  ([first]) => !Array.isArray(first)
+  ([a, b]) => typeof a === "object" && typeof b === "object"
 );
