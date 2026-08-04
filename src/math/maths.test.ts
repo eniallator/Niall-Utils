@@ -60,8 +60,12 @@ describe("positiveMod", () => {
     expect(positiveMod(9, 3)).toBe(0);
   });
 
-  it("handles negative divisor", () => {
-    expect(positiveMod(7, -3)).toBe(-2);
+  it("still returns a non-negative result for a negative divisor", () => {
+    expect(positiveMod(7, -3)).toBe(1);
+  });
+
+  it("still returns a non-negative result for negative dividend and divisor", () => {
+    expect(positiveMod(-7, -3)).toBe(2);
   });
 });
 

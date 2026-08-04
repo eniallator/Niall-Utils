@@ -1,11 +1,12 @@
 import type {
-  Alphabet,
+  AlphaNumeric,
   Capture,
   MatchString,
   Skip,
   Whitespace,
 } from "../core/stringTypes.ts";
 import { raise } from "../core/utils.ts";
+import { typedToEntries } from "../data/entries.ts";
 
 /**
  * Adds a typed event listener to an element, inferring the event type from the event name.
@@ -45,6 +46,10 @@ const get = <E extends HTMLElement>(
   baseEl.querySelector<E>(selector) ??
   raise(new Error(`Could not find element with selector "${selector}"`));
 
+/** Escapes the characters that are special inside a double-quoted HTML attribute value: `&` and `"`. */
+const escapeAttrValue = (val: string): string =>
+  val.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+
 /**
  * Serializes an attributes record into an HTML attribute string, e.g. `{ id: "foo", disabled: null }`
  * becomes `id="foo" disabled`.
@@ -54,14 +59,16 @@ const get = <E extends HTMLElement>(
 const toAttrs = (
   attrs: Readonly<Record<string, string | number | null>>
 ): string =>
-  Object.entries(attrs)
-    .map(([key, val]) => (val != null ? `${key}="${val}"` : key))
+  typedToEntries(attrs)
+    .map(([key, val]) =>
+      val != null ? `${key}="${escapeAttrValue(String(val))}"` : key
+    )
     .join(" ");
 
 type InferElement<S extends string> =
   MatchString<
     Lowercase<S>,
-    [Skip<Whitespace>, Skip<"<", 1>, Skip<Whitespace>, Capture<Alphabet>]
+    [Skip<Whitespace>, Skip<"<", 1>, Skip<Whitespace>, Capture<AlphaNumeric>]
   > extends infer Result
     ? Result extends keyof HTMLElementTagNameMap
       ? HTMLElementTagNameMap[Result]

@@ -28,6 +28,23 @@ describe("typedKeys", () => {
   it("returns empty array for empty object", () => {
     expect(typedKeys({})).toEqual([]);
   });
+
+  it("excludes non-enumerable own properties", () => {
+    const cmpFn = (a: unknown, b: unknown) => (String(a) > String(b) ? 1 : -1);
+    expect(typedKeys(["a", "b"]).sort(cmpFn)).toEqual(["0", "1"]);
+
+    const obj: { a: number; hidden?: number } = { a: 1 };
+    Object.defineProperty(obj, "hidden", { value: 2, enumerable: false });
+    expect(typedKeys(obj)).toEqual(["a"]);
+  });
+
+  it("excludes non-enumerable symbol keys when includeSymbols is true", () => {
+    const visible = Symbol("visible");
+    const hidden = Symbol("hidden");
+    const obj = { [visible]: 1 };
+    Object.defineProperty(obj, hidden, { value: 2, enumerable: false });
+    expect(typedKeys(obj, true)).toEqual([visible]);
+  });
 });
 
 describe("typedToEntries", () => {
@@ -121,6 +138,16 @@ describe("pick", () => {
   it("returns empty object for empty keys array", () => {
     expect(pick({ a: 1 }, [])).toEqual({});
   });
+
+  it("supports the data-last (curried) call form", () => {
+    expect(pick(["a", "c"])({ a: 1, b: 2, c: 3 })).toEqual({ a: 1, c: 3 });
+  });
+
+  it("supports symbol keys in the data-last (curried) call form", () => {
+    const sym = Symbol("s");
+    const obj = { a: 1, [sym]: 2 };
+    expect(pick([sym], true)(obj)).toEqual({ [sym]: 2 });
+  });
 });
 
 describe("omit", () => {
@@ -134,6 +161,16 @@ describe("omit", () => {
 
   it("returns original object for empty keys array", () => {
     expect(omit({ a: 1 }, [])).toEqual({ a: 1 });
+  });
+
+  it("supports the data-last (curried) call form", () => {
+    expect(omit(["b"])({ a: 1, b: 2, c: 3 })).toEqual({ a: 1, c: 3 });
+  });
+
+  it("supports symbol keys in the data-last (curried) call form", () => {
+    const sym = Symbol("s");
+    const obj = { a: 1, [sym]: 2 };
+    expect(omit([sym], true)(obj)).toEqual({ a: 1 });
   });
 });
 

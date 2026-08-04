@@ -66,6 +66,22 @@ describe("debounce", () => {
     expect(fn).toHaveBeenCalledExactlyOnceWith(1, "two", { three: true });
   });
 
+  it("does not let a reentrant call scheduled from within fn get clobbered by the outer callback's cleanup", () => {
+    const fn = vi.fn((label: string) => {
+      if (label === "first") debounced("second");
+    });
+    const debounced = debounce(fn, 100);
+
+    debounced("first");
+    vi.advanceTimersByTime(100);
+    expect(fn).toHaveBeenCalledExactlyOnceWith("first");
+
+    // "second" was scheduled reentrantly from within fn; cancel should actually stop it.
+    debounced.cancel();
+    vi.advanceTimersByTime(100);
+    expect(fn).toHaveBeenCalledOnce();
+  });
+
   it("should be safe to cancel when timer is already null", () => {
     const fn = vi.fn();
     const debounced = debounce(fn, 100);

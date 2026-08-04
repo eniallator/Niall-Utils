@@ -1,31 +1,57 @@
 import { describe, expect, it } from "vitest";
 
-import { createWeightedGradient, lerpColors } from "./color.ts";
+import {
+  createWeightedGradient,
+  lerpColors,
+  parseHexChannels,
+} from "./color.ts";
 
-describe("lerpColors", () => {
-  it("returns the first color at 0 and the second color at 1", () => {
-    expect(lerpColors("ff0000", "00ff00", 0)).toBe("ff0000");
-    expect(lerpColors("ff0000", "00ff00", 1)).toBe("00ff00");
-  });
-
-  it("interpolates channels correctly at 0.5", () => {
-    expect(lerpColors("ff0000", "00ff00", 0.5)).toBe("808000");
+describe("parseHexChannels", () => {
+  it("parses a hex string into r, g, b channel values", () => {
+    expect(parseHexChannels("ff0000")).toEqual([255, 0, 0]);
+    expect(parseHexChannels("00ff00")).toEqual([0, 255, 0]);
+    expect(parseHexChannels("0000ff")).toEqual([0, 0, 255]);
   });
 
   it("handles uppercase hex strings", () => {
-    expect(lerpColors("0000FF", "FFFFFF", 0.25)).toBe("4040ff");
+    expect(parseHexChannels("0000FF")).toEqual([0, 0, 255]);
   });
 
-  it("throws when the first color is invalid", () => {
-    expect(() => lerpColors("zzzzzz", "00ff00", 0.5)).toThrow(
-      "Invalid colour a zzzzzz"
-    );
+  it("throws for an invalid hex string", () => {
+    expect(() => parseHexChannels("zzzzzz")).toThrow("Invalid colour zzzzzz");
+  });
+});
+
+describe("lerpColors", () => {
+  it("returns the first color at 0 and the second color at 1", () => {
+    const red = parseHexChannels("ff0000");
+    const green = parseHexChannels("00ff00");
+    expect(lerpColors(red, green, 0)).toBe("ff0000");
+    expect(lerpColors(red, green, 1)).toBe("00ff00");
   });
 
-  it("throws when the second color is invalid", () => {
-    expect(() => lerpColors("ff0000", "xxxxxx", 0.5)).toThrow(
-      "Invalid colour b xxxxxx"
-    );
+  it("interpolates channels correctly at 0.5", () => {
+    expect(
+      lerpColors(parseHexChannels("ff0000"), parseHexChannels("00ff00"), 0.5)
+    ).toBe("808000");
+  });
+
+  it("handles uppercase hex strings", () => {
+    expect(
+      lerpColors(parseHexChannels("0000FF"), parseHexChannels("FFFFFF"), 0.25)
+    ).toBe("4040ff");
+  });
+
+  it("clamps channels for percent below 0", () => {
+    const red = parseHexChannels("ff0000");
+    const blue = parseHexChannels("0000ff");
+    expect(lerpColors(red, blue, -1)).toBe("ff0000");
+  });
+
+  it("clamps channels for percent above 1", () => {
+    const red = parseHexChannels("ff0000");
+    const blue = parseHexChannels("0000ff");
+    expect(lerpColors(red, blue, 2)).toBe("0000ff");
   });
 });
 
@@ -57,5 +83,11 @@ describe("createWeightedGradient", () => {
   it("throws when the gradient contains no entries", () => {
     const gradient = createWeightedGradient([]);
     expect(() => gradient(0.5)).toThrow("No items found in gradient!");
+  });
+
+  it("throws when a gradient stop color is invalid", () => {
+    expect(() => createWeightedGradient([["zzzzzz", 1]])).toThrow(
+      "Invalid colour zzzzzz"
+    );
   });
 });

@@ -99,6 +99,66 @@ describe("memoize", () => {
     expect(result).toBe("Alice is 30");
   });
 
+  it("does not collide NaN, undefined, and Infinity under the default key", () => {
+    const fn = vi.fn((x: unknown): string => String(x));
+    const memoizedFn = memoize(fn);
+    expect(memoizedFn(NaN)).toBe("NaN");
+    expect(memoizedFn(undefined)).toBe("undefined");
+    expect(memoizedFn(Infinity)).toBe("Infinity");
+    expect(memoizedFn(-Infinity)).toBe("-Infinity");
+    expect(memoizedFn(null)).toBe("null");
+    expect(fn).toHaveBeenCalledTimes(5);
+  });
+
+  it("still caches repeated calls with NaN, undefined, and Infinity", () => {
+    const fn = vi.fn((x: unknown): string => String(x));
+    const memoizedFn = memoize(fn);
+    memoizedFn(NaN);
+    memoizedFn(NaN);
+    memoizedFn(undefined);
+    memoizedFn(undefined);
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it("evicts the least-recently-used entry once maxSize is exceeded", () => {
+    const fn = vi.fn((x: number): number => x * 2);
+    const memoizedFn = memoize(fn, undefined, 2);
+
+    memoizedFn(1); // cache: [1]
+    memoizedFn(2); // cache: [1, 2]
+    memoizedFn(3); // cache: [2, 3] -- 1 evicted (maxSize exceeded)
+
+    memoizedFn(1); // miss, recomputed
+    expect(fn).toHaveBeenCalledTimes(4);
+    expect(fn).toHaveBeenNthCalledWith(4, 1);
+  });
+
+  it("treats a cache hit as recently-used, protecting it from eviction", () => {
+    const fn = vi.fn((x: number): number => x * 2);
+    const memoizedFn = memoize(fn, undefined, 2);
+
+    memoizedFn(1); // cache: [1]
+    memoizedFn(2); // cache: [1, 2]
+    memoizedFn(1); // hit, 1 is now most-recently-used -- cache order: [2, 1]
+    memoizedFn(3); // cache: [1, 3] -- 2 evicted, not 1
+
+    expect(memoizedFn(1)).toBe(2); // still cached, no recompute
+    expect(fn).toHaveBeenCalledTimes(3);
+
+    memoizedFn(2); // was evicted, recomputed
+    expect(fn).toHaveBeenCalledTimes(4);
+  });
+
+  it("does not evict anything when maxSize is not provided", () => {
+    const fn = vi.fn((x: number): number => x * 2);
+    const memoizedFn = memoize(fn);
+
+    for (let i = 0; i < 50; i++) memoizedFn(i);
+    for (let i = 0; i < 50; i++) memoizedFn(i);
+
+    expect(fn).toHaveBeenCalledTimes(50);
+  });
+
   it("does not share cache between different memoized functions", () => {
     const fn1 = vi.fn((x: number): number => x + 1);
     const fn2 = vi.fn((x: number): number => x + 2);

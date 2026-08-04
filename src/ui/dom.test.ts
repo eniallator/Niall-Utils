@@ -57,6 +57,24 @@ describe("dom.toAttrs", () => {
   it("should return empty string for empty object", () => {
     expect(dom.toAttrs({})).toBe("");
   });
+
+  it("should escape double quotes in attribute values", () => {
+    expect(dom.toAttrs({ title: 'say "hi"' })).toBe(
+      'title="say &quot;hi&quot;"'
+    );
+  });
+
+  it("should escape ampersands in attribute values", () => {
+    expect(dom.toAttrs({ title: "fish & chips" })).toBe(
+      'title="fish &amp; chips"'
+    );
+  });
+
+  it("should round-trip an escaped value through toHtml without breaking out of the attribute", () => {
+    const attrs = dom.toAttrs({ title: 'say "hi" & bye' });
+    const el = dom.toHtml(`<div ${attrs}></div>`);
+    expect(el.getAttribute("title")).toBe('say "hi" & bye');
+  });
 });
 
 describe("dom.toHtml", () => {
@@ -75,6 +93,20 @@ describe("dom.toHtml", () => {
   it("should throw if no nodes found", () => {
     expect(() => dom.toHtml("")).toThrow("No nodes found");
     expect(() => dom.toHtml("   ")).toThrow("No nodes found");
+  });
+
+  it("should infer the concrete element type for a digit-bearing tag name", () => {
+    const el = dom.toHtml("<h1>Title</h1>");
+    expect(el instanceof HTMLHeadingElement).toBe(true);
+    expect(el.textContent).toBe("Title");
+  });
+
+  it("should infer the concrete element type for a digit-bearing tag name", () => {
+    // The `satisfies` check fails to compile if InferElement falls back to the generic HTMLElement
+    // instead of resolving the digit-bearing "h1" tag name.
+    const el = dom.toHtml("<h1>Title</h1>") satisfies HTMLHeadingElement;
+    expect(el instanceof HTMLHeadingElement).toBe(true);
+    expect(el.textContent).toBe("Title");
   });
 
   it("should fallback to HTMLElement for unknown tags", () => {

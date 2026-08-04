@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { multiSequence, sequence, timeSequence } from "./animate.ts";
+import {
+  multiSequence,
+  sequence,
+  timeMultiSequence,
+  timeSequence,
+} from "./animate.ts";
 
 describe("sequence", () => {
   it("returns the correct frame and delta for a looping sequence", () => {
@@ -20,6 +25,16 @@ describe("sequence", () => {
     expect(seq(199)).toEqual({ frame: "y", delta: 0.99, index: 1 });
     expect(seq(200)).toEqual({ frame: "y", delta: 1, index: 1 });
     expect(seq(999)).toEqual({ frame: "y", delta: 1, index: 1 });
+  });
+
+  it("wraps correctly for negative currTotal when looping", () => {
+    const seq = sequence(["a", "b", "c"], 100, true);
+    expect(seq(-50)).toEqual({ frame: "c", delta: 0.5, index: 2 });
+  });
+
+  it("holds on the first frame for negative currTotal when not looping", () => {
+    const seq = sequence(["x", "y"], 100, false);
+    expect(seq(-50)).toEqual({ frame: "x", delta: 0, index: 0 });
   });
 
   it("throws when frames array is empty", () => {
@@ -54,33 +69,11 @@ describe("multiSequence", () => {
     blue: ["b1", "b2", "b3"],
   };
 
-  it("switches between named sequences and remains temporal by default", () => {
-    const multi = multiSequence(sequences, 100, "red", true);
-    const now = new Date();
-
-    const redResult = multi("red", now);
-    expect(["r1", "r2"]).toContain(redResult.frame);
-    expect(redResult.delta).toBeGreaterThanOrEqual(0);
-    expect(redResult.delta).toBeLessThan(1);
-
-    const blueResult = multi("blue", now);
-    expect(["b1", "b2", "b3"]).toContain(blueResult.frame);
-    expect(blueResult.delta).toBeGreaterThanOrEqual(0);
-    expect(blueResult.delta).toBeLessThan(1);
-  });
-
-  it("uses total values when temporal is false", () => {
-    const multi = multiSequence(sequences, 100, "red", false);
+  it("switches between named sequences using a running total", () => {
+    const multi = multiSequence(sequences, 100, "red");
 
     expect(multi("red", 150)).toEqual({ frame: "r2", delta: 0.5, index: 1 });
     expect(multi("blue", 250)).toEqual({ frame: "b3", delta: 0.5, index: 2 });
-  });
-
-  it("throws when non-temporal is called without a total argument", () => {
-    const multi = multiSequence(sequences, 100, "red", false);
-    expect(() => (multi as (arg: string) => unknown)("red")).toThrow(
-      "multiSequences need a total argument passed in"
-    );
   });
 
   it("throws when initial sequence does not exist", () => {
@@ -91,23 +84,81 @@ describe("multiSequence", () => {
   });
 
   it("throws when switching to a non-existent target sequence", () => {
-    const multi = multiSequence(sequences, 100, "red", true);
-    const now = new Date();
+    const multi = multiSequence(sequences, 100, "red");
 
     // First call establishes 'red' as last
-    multi("red", now);
+    multi("red", 0);
 
     // Switching to a non-existent sequence should throw
-    expect(() => multi("green" as keyof typeof sequences, now)).toThrow(
+    expect(() => multi("green" as keyof typeof sequences, 0)).toThrow(
       "Sequence not found green"
     );
   });
+});
 
-  it("passes number arg correctly when switching sequences (non-Date branch)", () => {
-    const multi = multiSequence(sequences, 100, "red", false);
+describe("timeMultiSequence", () => {
+  const sequences = {
+    red: ["r1", "r2"],
+    blue: ["b1", "b2", "b3"],
+  };
 
-    // Switch from red to blue with a numeric arg — exercises the
-    // arg instanceof Date ? arg : undefined false branch
-    expect(multi("blue", 250)).toEqual({ frame: "b3", delta: 0.5, index: 2 });
+  it("switches between named sequences using wall-clock time", () => {
+    const multi = timeMultiSequence(sequences, 100, "red");
+    const now = new Date();
+
+    const redResult = multi("red", now);
+    expect(["r1", "r2"]).toContain(redResult.frame);
+    expect(redResult.delta).toBeGreaterThanOrEqual(0);
+    expect(redResult.delta).toBeLessThan(1);
+
+    const blueResult = multi("blue", now);
+    expect(["b1", "b2", "b3"]).toContain(blueResult.frame);
+    expect(blueResult.delta).toBe(0);
+  });
+
+  it("resets the elapsed-time reference point when switching targets", () => {
+    const start = new Date(2026, 0, 1, 0, 0, 0, 0);
+    const multi = timeMultiSequence(sequences, 100, "red", start);
+
+    const switchTime = new Date(2026, 0, 1, 0, 0, 0, 300);
+    expect(multi("blue", switchTime)).toEqual({
+      frame: "b1",
+      delta: 0,
+      index: 0,
+    });
+
+    const later = new Date(2026, 0, 1, 0, 0, 0, 450);
+    expect(multi("blue", later)).toEqual({
+      frame: "b2",
+      delta: 0.5,
+      index: 1,
+    });
+  });
+
+  it("defaults now when no date is provided", () => {
+    const multi = timeMultiSequence(sequences, 100, "red");
+    const result = multi("red");
+
+    expect(["r1", "r2"]).toContain(result.frame);
+    expect(result.delta).toBeGreaterThanOrEqual(0);
+    expect(result.delta).toBeLessThan(1);
+  });
+
+  it("throws when initial sequence does not exist", () => {
+    const seqData = { red: ["r1", "r2"] };
+    expect(() =>
+      timeMultiSequence(seqData, 100, "blue" as keyof typeof seqData)
+    ).toThrow("Sequence not found blue");
+  });
+
+  it("throws when switching to a non-existent target sequence", () => {
+    const multi = timeMultiSequence(sequences, 100, "red");
+    const now = new Date();
+
+    multi("red", now);
+
+    expect(() => multi("green" as keyof typeof sequences, now)).toThrow(
+      "Sequence not found green"
+    );
   });
 });

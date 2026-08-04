@@ -11,6 +11,21 @@ const getPageFactory = (maxItems: number) => (page: number, perPage: number) =>
   );
 
 describe("collectPaginated", () => {
+  it("throws instead of hanging when perPage is 0", async () => {
+    const getPage = vi.fn(() => Promise.resolve([]));
+    await expect(collectPaginated<number>(0, getPage)).rejects.toThrow(
+      "perPage must be greater than 0, got 0"
+    );
+    expect(getPage).not.toHaveBeenCalled();
+  });
+
+  it("throws for a negative perPage", async () => {
+    const getPage = vi.fn(() => Promise.resolve([]));
+    await expect(collectPaginated<number>(-1, getPage)).rejects.toThrow(
+      "perPage must be greater than 0, got -1"
+    );
+  });
+
   it("returns all items from a single page", async () => {
     const getPage = vi.fn(getPageFactory(5));
 

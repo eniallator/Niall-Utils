@@ -42,8 +42,7 @@ export const mapFilter = pipeable<{
       if (item != null) output.push(item);
     }
     return output;
-  },
-  ([first]) => Array.isArray(first)
+  }
 );
 
 /**
@@ -75,8 +74,7 @@ export const mapFind = pipeable<{
       if (out != null) return out;
     }
     return null;
-  },
-  ([first]) => Array.isArray(first)
+  }
 );
 
 /** A tuple-typed array guaranteed to contain at least one `T`. */
@@ -118,6 +116,5 @@ export const mapAccumulate = pipeable<{
       acc = nextAcc;
     }
     return output;
-  },
-  ([first]) => Array.isArray(first)
+  }
 );

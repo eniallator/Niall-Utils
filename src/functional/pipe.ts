@@ -537,8 +537,5 @@ export interface Pipe {
  * Pipes a value through a sequence of unary functions left-to-right, e.g. `pipe(x, f, g, h)` is equivalent
  * to `h(g(f(x)))` but reads top-to-bottom instead of nesting.
  */
-export const pipe = ((data: unknown, ...mappers: AnyArgFn[]) => {
-  let out = data;
-  for (const mapper of mappers) out = mapper(out);
-  return out;
-}) as Pipe;
+export const pipe = ((data: unknown, ...mappers: AnyArgFn[]) =>
+  mappers.reduce((out, mapper) => mapper(out), data)) as Pipe;

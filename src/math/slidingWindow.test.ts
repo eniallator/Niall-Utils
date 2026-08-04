@@ -52,4 +52,27 @@ describe("slidingWindow", () => {
       [2, 3],
     ]);
   });
+
+  it("does not wrap a negative start when non-circular", () => {
+    const result = slidingWindow([1, 2, 3], 2, 1, -1, false);
+    expect(result).toEqual([[undefined, 1]]);
+  });
+
+  it("throws instead of hanging when step is 0", () => {
+    expect(() => slidingWindow([1, 2, 3], 2, 0)).toThrow(
+      "step must be greater than 0, got 0"
+    );
+  });
+
+  it("throws instead of hanging when step is negative", () => {
+    expect(() => slidingWindow([1, 2, 3], 2, -1)).toThrow(
+      "step must be greater than 0, got -1"
+    );
+  });
+
+  it("throws instead of silently returning empty windows for a negative windowSize", () => {
+    expect(() => slidingWindow([1, 2, 3, 4], -1)).toThrow(
+      "windowSize must be non-negative, got -1"
+    );
+  });
 });

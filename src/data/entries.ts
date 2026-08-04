@@ -16,10 +16,12 @@ export const typedKeys = pipeable<{
 }>(
   <O extends object>(obj: O, includeSymbols?: boolean): (keyof O)[] =>
     includeSymbols
-      ? (Object.getOwnPropertyNames(obj) as (keyof O)[]).concat(
-          Object.getOwnPropertySymbols(obj) as (keyof O)[]
+      ? (Object.keys(obj) as (keyof O)[]).concat(
+          Object.getOwnPropertySymbols(obj).filter(sym =>
+            Object.prototype.propertyIsEnumerable.call(obj, sym)
+          ) as (keyof O)[]
         )
-      : (Object.getOwnPropertyNames(obj) as (keyof O)[]),
+      : (Object.keys(obj) as (keyof O)[]),
   ([first]) => typeof first === "object"
 );
 
@@ -154,17 +156,19 @@ export const pick = pipeable<{
     keys: readonly K[],
     includeSymbols?: boolean
   ): Pick<O, K>;
-  <K extends string>(
+  <K extends PropertyKey>(
     keys: readonly K[],
     includeSymbols?: boolean
-  ): <O extends Record<string, unknown>>(obj: O) => Pick<O, K>;
+  ): <O extends Record<K, unknown>>(obj: O) => Pick<O, K>;
 }>(
   <O extends object, K extends keyof O>(
     obj: O,
     keys: readonly K[],
     includeSymbols: boolean = false
-  ): Pick<O, K> =>
-    filterObject(obj, ([key]) => keys.includes(key as K), includeSymbols),
+  ): Pick<O, K> => {
+    const keySet = new Set(keys);
+    return filterObject(obj, ([key]) => keySet.has(key as K), includeSymbols);
+  },
   ([a, b]) => typeof a === "object" && typeof b === "object"
 );
 
@@ -184,16 +188,18 @@ export const omit = pipeable<{
     keys: readonly K[],
     includeSymbols?: boolean
   ): Omit<O, K>;
-  <K extends string>(
+  <K extends PropertyKey>(
     keys: readonly K[],
     includeSymbols?: boolean
-  ): <O extends Record<string, unknown>>(obj: O) => Omit<O, K>;
+  ): <O extends Record<K, unknown>>(obj: O) => Omit<O, K>;
 }>(
   <O extends object, K extends keyof O>(
     obj: O,
     keys: readonly K[],
     includeSymbols: boolean = false
-  ): Omit<O, K> =>
-    filterObject(obj, ([key]) => !keys.includes(key as K), includeSymbols),
+  ): Omit<O, K> => {
+    const keySet = new Set(keys);
+    return filterObject(obj, ([key]) => !keySet.has(key as K), includeSymbols);
+  },
   ([a, b]) => typeof a === "object" && typeof b === "object"
 );

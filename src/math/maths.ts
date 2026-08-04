@@ -24,13 +24,14 @@ export const polarToCartesian = (
 
 /**
  * Computes `a mod b`, always returning a non-negative result (unlike JavaScript's `%` operator, which can
- * return a negative value for a negative `a`). Pipeable: call as `positiveMod(a, b)` or `positiveMod(b)(a)`.
+ * return a negative value for a negative `a` or a negative `b`). Pipeable: call as `positiveMod(a, b)` or
+ * `positiveMod(b)(a)`.
  * @param {number} a The dividend.
  * @param {number} b The divisor.
- * @returns {number} `a mod b`, in the range `[0, b)`.
+ * @returns {number} `a mod b`, in the range `[0, |b|)`.
  */
 export const positiveMod = simplePipeable(
-  (a: number, b: number) => ((a % b) + b) % b
+  (a: number, b: number) => ((a % b) + Math.abs(b)) % Math.abs(b)
 );
 
 /**
@@ -46,7 +47,7 @@ export const clamp = simplePipeable((value: number, min: number, max: number) =>
 );
 
 /** The maximum recursion depth the recursive numeric type helpers in this module can evaluate. */
-export type RecursionLimit = 1001;
+export type RecursionLimit = 990;
 
 /** Decrements a number type by one, at the type level. Saturates at `0`. */
 export type Decrement<N extends number> =
@@ -72,11 +73,13 @@ export type Multiply<
   A extends number,
   B extends number,
   I extends number = 1,
-> = I extends RecursionLimit
-  ? number
-  : I extends B
-    ? A
-    : Add<A, Multiply<A, B, Increment<I>>>;
+> = B extends 0
+  ? 0
+  : I extends RecursionLimit
+    ? number
+    : I extends B
+      ? A
+      : Add<A, Multiply<A, B, Increment<I>>>;
 
 interface DigitLookup {
   "0": 0;

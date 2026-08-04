@@ -1,4 +1,5 @@
 import { raise } from "../core/utils.ts";
+import { clamp, positiveMod } from "../math/maths.ts";
 
 /** The frame data returned for a given point in a {@link sequence}/{@link timeSequence}. */
 interface SequenceResult<F> {
@@ -21,17 +22,20 @@ export const sequence =
   (currTotal: number): SequenceResult<F> => {
     const rawIndex = Math.floor(currTotal / perFrame);
     const index = loop
-      ? rawIndex % frames.length
-      : Math.min(rawIndex, frames.length - 1);
+      ? positiveMod(rawIndex, frames.length)
+      : clamp(rawIndex, 0, frames.length - 1);
 
     return {
       index,
       frame:
         frames.at(index) ?? raise(new Error(`Frame index not found: ${index}`)),
-      delta:
-        loop || rawIndex < frames.length
-          ? (currTotal % perFrame) / perFrame
-          : 1,
+      delta: loop
+        ? positiveMod(currTotal, perFrame) / perFrame
+        : rawIndex < 0
+          ? 0
+          : rawIndex < frames.length
+            ? positiveMod(currTotal, perFrame) / perFrame
+            : 1,
     };
   };
 
@@ -56,74 +60,61 @@ export const timeSequence = <F>(
 };
 
 /**
- * Manages several named {@link sequence}/{@link timeSequence} animations and switches between them, resetting
- * the new sequence's start point whenever the active target changes.
- * @template S A record mapping sequence names to their frame arrays.
- * @param {S} sequences The named sequences to switch between.
- * @param {number} msPerFrame How many units (milliseconds if `temporal`, otherwise caller-defined total units) each frame lasts.
- * @param {keyof S} initial The sequence to start on.
- * @param {true} [temporal] When `true` (the default), sequences are driven by wall-clock time via {@link timeSequence}.
- * @param {Date} [start] The time the initial sequence started, only used when `temporal` is `true`. Defaults to the current time.
- * @returns {(target: keyof S, now?: Date) => SequenceResult<S[keyof S][number]>} A function that switches to (and reads) the named sequence, given the current time.
- */
-export function multiSequence<S extends Record<string, unknown[]>>(
-  sequences: S,
-  msPerFrame: number,
-  initial: keyof S,
-  temporal?: true,
-  start?: Date
-): (target: keyof S, now?: Date) => SequenceResult<S[keyof S][number]>;
-/**
  * Manages several named {@link sequence} animations and switches between them, resetting the new sequence's
- * start point whenever the active target changes. This overload is driven by a manually tracked total
- * instead of wall-clock time.
+ * start point whenever the active target changes.
  * @template S A record mapping sequence names to their frame arrays.
  * @param {S} sequences The named sequences to switch between.
- * @param {number} msPerFrame How many total units each frame lasts.
+ * @param {number} perFrame How many total units each frame lasts.
  * @param {keyof S} initial The sequence to start on.
- * @param {false} temporal Must be `false` to select this manually-driven overload.
  * @returns {(target: keyof S, total: number) => SequenceResult<S[keyof S][number]>} A function that switches to (and reads) the named sequence, given the running total for that sequence.
  */
-export function multiSequence<S extends Record<string, unknown[]>>(
+export const multiSequence = <S extends Record<string, unknown[]>>(
   sequences: S,
-  msPerFrame: number,
-  initial: keyof S,
-  temporal: false
-): (target: keyof S, total: number) => SequenceResult<S[keyof S][number]>;
-export function multiSequence<S extends Record<string, unknown[]>>(
-  sequences: S,
-  msPerFrame: number,
-  initial: keyof S,
-  temporal: boolean = true,
-  start?: Date
-) {
-  const createSeq = temporal ? timeSequence : sequence;
+  perFrame: number,
+  initial: keyof S
+): ((target: keyof S, total: number) => SequenceResult<S[keyof S][number]>) => {
+  const getFrames = (target: keyof S): S[keyof S] =>
+    sequences[target] ??
+    raise(new Error(`Sequence not found ${String(target)}`));
 
   let last = initial;
-  let seq = createSeq(
-    sequences[initial] ??
-      raise(new Error(`Sequence not found ${String(initial)}`)),
-    msPerFrame,
-    true,
-    start
-  );
+  let seq = sequence(getFrames(initial), perFrame, true);
 
-  return (target: keyof S, arg?: Date | number) => {
-    if (!temporal && arg == null) {
-      raise(new Error("multiSequences need a total argument passed in"));
-    }
-
+  return (target: keyof S, total: number) => {
     if (target !== last) {
       last = target;
-      seq = createSeq(
-        sequences[target] ??
-          raise(new Error(`Sequence not found ${String(target)}`)),
-        msPerFrame,
-        true,
-        arg instanceof Date ? arg : undefined
-      );
+      seq = sequence(getFrames(target), perFrame, true);
     }
-
-    return seq(arg as Date & number);
+    return seq(total);
   };
-}
+};
+
+/**
+ * Time-based version of {@link multiSequence}: drives each managed sequence from elapsed wall-clock time
+ * instead of a manually tracked total, resetting the elapsed-time reference point whenever the active target
+ * changes.
+ * @template S A record mapping sequence names to their frame arrays.
+ * @param {S} sequences The named sequences to switch between.
+ * @param {number} msPerFrame How many milliseconds each frame lasts.
+ * @param {keyof S} initial The sequence to start on.
+ * @param {Date} [start] The time the initial sequence started. Defaults to the current time.
+ * @returns {(target: keyof S, now?: Date) => SequenceResult<S[keyof S][number]>} A function that switches to (and reads) the named sequence, given the current time.
+ */
+export const timeMultiSequence = <S extends Record<string, unknown[]>>(
+  sequences: S,
+  msPerFrame: number,
+  initial: keyof S,
+  start: Date = new Date()
+): ((target: keyof S, now?: Date) => SequenceResult<S[keyof S][number]>) => {
+  const multi = multiSequence(sequences, msPerFrame, initial);
+  let switchedAt = start;
+  let last = initial;
+
+  return (target: keyof S, now: Date = new Date()) => {
+    if (target !== last) {
+      last = target;
+      switchedAt = now;
+    }
+    return multi(target, now.getTime() - switchedAt.getTime());
+  };
+};

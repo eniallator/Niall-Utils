@@ -13,7 +13,10 @@ export const unsafeBase64 = unsafeTag<Base64>();
 
 const BASE_64_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-const BASE_64_CHARSET = new Set(BASE_64_CHARS);
+const BASE_64_REGEX = new RegExp(`^[${BASE_64_CHARS}]*$`);
+const BASE_64_CHAR_INDEX = new Map(
+  BASE_64_CHARS.split("").map((char, index) => [char, index])
+);
 
 /**
  * Checks whether every character in a string is a valid base64 character, narrowing it to {@link Base64}.
@@ -21,12 +24,8 @@ const BASE_64_CHARSET = new Set(BASE_64_CHARS);
  * @param {string} str The string to validate.
  * @returns {boolean} `true` if `str` only contains valid base64 characters.
  */
-export const isValidBase64 = (str: string): str is Base64 => {
-  for (const char of str) {
-    if (!BASE_64_CHARSET.has(char)) return false;
-  }
-  return true;
-};
+export const isValidBase64 = (str: string): str is Base64 =>
+  BASE_64_REGEX.test(str);
 
 /**
  * Encodes a non-negative integer as a base64 string.
@@ -55,7 +54,7 @@ export const base64FromUint = (n: number, length?: number): Base64 => {
 export const base64ToUint = (str: Base64): number => {
   let n = 0;
   for (const char of str) {
-    n = n * 64 + BASE_64_CHARS.indexOf(char);
+    n = n * 64 + (BASE_64_CHAR_INDEX.get(char) ?? -1);
   }
   return n;
 };

@@ -36,6 +36,8 @@ export type AlphabetLower =
 export type AlphabetUpper = Uppercase<AlphabetLower>;
 /** A single Latin letter character, either case. */
 export type Alphabet = AlphabetLower | AlphabetUpper;
+/** A single Latin letter or decimal digit character. */
+export type AlphaNumeric = Alphabet | Digit;
 
 type Quantifier = number | "0+" | "1+";
 

@@ -27,6 +27,18 @@ describe("mapFilter", () => {
   it("returns empty array for empty input array", () => {
     expect(mapFilter([], n => n)).toEqual([]);
   });
+
+  it("supports the data-last (curried) call form", () => {
+    const result = mapFilter((n: number) => (n % 2 === 0 ? n * 2 : null))([
+      1, 2, 3, 4,
+    ]);
+    expect(result).toEqual([4, 8]);
+  });
+
+  it("throws immediately instead of silently dropping the callback when arr is undefined", () => {
+    // @ts-expect-error intentionally passing undefined as arr
+    expect(() => mapFilter(undefined, n => n)).toThrow();
+  });
 });
 
 describe("mapFind", () => {
@@ -53,6 +65,16 @@ describe("mapFind", () => {
   it("returns null for empty input array", () => {
     expect(mapFind([], n => n)).toBeNull();
   });
+
+  it("supports the data-last (curried) call form", () => {
+    const result = mapFind((n: number) => (n > 2 ? n * 2 : null))([1, 2, 3, 4]);
+    expect(result).toBe(6);
+  });
+
+  it("throws immediately instead of silently dropping the callback when arr is undefined", () => {
+    // @ts-expect-error intentionally passing undefined as arr
+    expect(() => mapFind(undefined, n => n)).toThrow();
+  });
 });
 
 describe("mapAccumulate", () => {
@@ -78,5 +100,24 @@ describe("mapAccumulate", () => {
 
   it("returns an empty array for empty input", () => {
     expect(mapAccumulate([], () => [0, "ignored"], 5)).toEqual([]);
+  });
+
+  it("supports the data-last (curried) call form", () => {
+    const result = mapAccumulate(
+      (acc: number, value: number) => [acc + value, acc + value],
+      0
+    )([1, 2, 3, 4]);
+    expect(result).toEqual([1, 3, 6, 10]);
+  });
+
+  it("throws immediately instead of silently dropping the callback when arr is undefined", () => {
+    const callback = (acc: number, value: number): [number, number] => [
+      acc + value,
+      value,
+    ];
+    expect(() =>
+      // @ts-expect-error intentionally passing undefined as arr
+      mapAccumulate(undefined, callback, 0)
+    ).toThrow();
   });
 });

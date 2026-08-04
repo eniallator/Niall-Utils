@@ -17,10 +17,13 @@ export const debounce = <Fn extends AnyArgFn<void>>(
   const debounced = ((...args: Parameters<Fn>) => {
     if (timer != null) clearTimeout(timer);
 
-    timer = setTimeout(() => {
+    const id = setTimeout(() => {
       fn(...args);
-      timer = null;
+      // Only clear if `id` is still the active timer: a reentrant call from within `fn` may have already
+      // scheduled a new one, which this callback firing shouldn't clobber.
+      if (timer === id) timer = null;
     }, debounceMs);
+    timer = id;
   }) as Fn & { cancel: () => void };
 
   debounced.cancel = () => {
