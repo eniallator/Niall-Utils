@@ -1,7 +1,5 @@
-import { unsafeTag } from "../core/tagged.ts";
+import { unsafeTag, type Tagged } from "../core/tagged.ts";
 import { raise } from "../core/utils.ts";
-
-import type { Tagged } from "../core/tagged.ts";
 
 /** A string known to contain only valid base64 characters. */
 export type Base64 = Tagged<string, "Base64">;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { lerpColors, createWeightedGradient } from "./color.ts";
+import { createWeightedGradient, lerpColors } from "./color.ts";
 
 describe("lerpColors", () => {
   it("returns the first color at 0 and the second color at 1", () => {

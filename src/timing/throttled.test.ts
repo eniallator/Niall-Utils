@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { throttledAsync, throttled } from "./throttled.ts";
+import { throttled, throttledAsync } from "./throttled.ts";
 
 afterEach(() => {
   vi.useRealTimers();

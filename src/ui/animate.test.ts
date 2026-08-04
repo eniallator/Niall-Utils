@@ -85,8 +85,9 @@ describe("multiSequence", () => {
 
   it("throws when initial sequence does not exist", () => {
     const seqData = { red: ["r1", "r2"] };
-    expect(() => multiSequence(seqData, 100, "blue" as keyof typeof seqData))
-      .toThrow("Sequence not found blue");
+    expect(() =>
+      multiSequence(seqData, 100, "blue" as keyof typeof seqData)
+    ).toThrow("Sequence not found blue");
   });
 
   it("throws when switching to a non-existent target sequence", () => {

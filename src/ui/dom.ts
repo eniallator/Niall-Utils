@@ -1,5 +1,3 @@
-import { raise } from "../core/utils.ts";
-
 import type {
   Alphabet,
   Capture,
@@ -7,6 +5,7 @@ import type {
   Skip,
   Whitespace,
 } from "../core/stringTypes.ts";
+import { raise } from "../core/utils.ts";
 
 /**
  * Adds a typed event listener to an element, inferring the event type from the event name.
@@ -38,7 +37,7 @@ const addListener = <
  * @returns {E} The matched element.
  * @throws {Error} If no element matches `selector`.
  */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters
 const get = <E extends HTMLElement>(
   selector: string,
   baseEl: ParentNode = document

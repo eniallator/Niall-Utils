@@ -5,5 +5,5 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {}
   },
-  "postCreateCommand": "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && sudo -E corepack enable && yarn"
+  "postCreateCommand": "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && sudo -E corepack enable && pnpm install"
 }

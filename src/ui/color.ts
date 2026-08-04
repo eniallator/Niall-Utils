@@ -1,8 +1,8 @@
-import { mapAccumulate, mapFind } from "../functional/map.ts";
-import { slidingWindow } from "../math/slidingWindow.ts";
 import { tuple } from "../core/tuple.ts";
 import { raise } from "../core/utils.ts";
 import { zip } from "../data/zip.ts";
+import { mapAccumulate, mapFind } from "../functional/map.ts";
+import { slidingWindow } from "../math/slidingWindow.ts";
 
 /**
  * Linearly interpolates between two hex color strings, channel by channel.

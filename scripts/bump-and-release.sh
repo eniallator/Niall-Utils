@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-yarn npm login
-yarn version minor
-yarn release
+pnpm login
+pnpm version minor
+pnpm release

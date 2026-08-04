@@ -49,9 +49,7 @@ describe("attemptAsync", () => {
   });
 
   it("returns null when the callback rejects and no onError is provided", async () => {
-    const result = await attemptAsync(() =>
-      Promise.reject(new Error("fail"))
-    );
+    const result = await attemptAsync(() => Promise.reject(new Error("fail")));
     expect(result).toBeNull();
   });
 

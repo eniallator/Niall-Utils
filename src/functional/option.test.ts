@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Option } from "./option.ts";
-
-import type { OptionType } from "./option.ts";
+import { Option, type OptionType } from "./option.ts";
 
 describe("Option", () => {
   // --- Static constructors ---

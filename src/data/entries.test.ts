@@ -32,7 +32,7 @@ describe("typedKeys", () => {
 
 describe("typedToEntries", () => {
   it("returns entries for object", () => {
-    expect(typedToEntries({ a: 1, b: 2 }).sort()).toEqual([
+    expect(typedToEntries({ a: 1, b: 2 })).toEqual([
       ["a", 1],
       ["b", 2],
     ]);

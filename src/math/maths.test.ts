@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   cartesianToPolar,
   clamp,
-  positiveMod,
   polarToCartesian,
+  positiveMod,
 } from "./maths.ts";
 
 describe("cartesianToPolar", () => {
@@ -23,7 +23,7 @@ describe("cartesianToPolar", () => {
   it("handles negative coordinates", () => {
     const [r, theta] = cartesianToPolar(-1, -1);
     expect(r).toBeCloseTo(Math.sqrt(2));
-    expect(theta).toBeCloseTo(-3 * Math.PI / 4);
+    expect(theta).toBeCloseTo((-3 * Math.PI) / 4);
   });
 });
 

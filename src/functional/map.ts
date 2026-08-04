@@ -1,7 +1,5 @@
-import { Option } from "./option.ts";
+import { Option, type OptionType } from "./option.ts";
 import { pipeable } from "./pipeable.ts";
-
-import type { OptionType } from "./option.ts";
 
 type MapFn<I, O extends NonNullable<unknown>> = (
   val: I,

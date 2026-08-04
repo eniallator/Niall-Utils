@@ -31,7 +31,7 @@ pnpm add niall-utils
 ## Quick Example
 
 ```typescript
-import { dom, raise, cartesianToPolar, tuple } from "niall-utils";
+import { cartesianToPolar, dom, raise, tuple } from "niall-utils";
 
 const el = dom.toHtml(`<div><span>Hello</span></div>`);
 console.log(cartesianToPolar(1, 1));
@@ -141,14 +141,14 @@ This package supports tree-shakeable subpath imports. You can import from indivi
 
 ```typescript
 // Individual modules
-import { debounce } from "niall-utils/timing";
+import { raise, Tagged, unsafeTag } from "niall-utils/core";
 import { collectPaginated } from "niall-utils/data";
 import { base64FromUint } from "niall-utils/encoding";
+import { formatLocaleDate } from "niall-utils/format";
 import { Monad, Option } from "niall-utils/functional";
 import { cartesianToPolar, clamp } from "niall-utils/math";
-import { dom, animate, color } from "niall-utils/ui";
-import { raise, Tagged, unsafeTag } from "niall-utils/core";
-import { formatLocaleDate } from "niall-utils/format";
+import { debounce } from "niall-utils/timing";
+import { animate, color, dom } from "niall-utils/ui";
 ```
 
 ## Compatibility

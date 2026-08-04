@@ -1,5 +1,5 @@
-import { Monad } from "./monad.ts";
 import { raise } from "../core/utils.ts";
+import { Monad } from "./monad.ts";
 
 /**
  * Tracks, at the type level, whether an {@link Option} is statically known to hold a value (`"some"`),

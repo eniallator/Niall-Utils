@@ -8,9 +8,8 @@ type UnionToPartialRecurse<
   T extends readonly unknown[],
   K extends PropertyKey = DeepKeys<T>,
 > = T extends [infer A, ...infer B]
-  ?
-      | (Partial<Record<Exclude<K, keyof A>, undefined>> & A)
-      | UnionToPartialRecurse<B, K>
+  ? | (Partial<Record<Exclude<K, keyof A>, undefined>> & A)
+    | UnionToPartialRecurse<B, K>
   : never;
 
 /**

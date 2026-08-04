@@ -8,9 +8,9 @@ import type { AnyArgFn } from "../timing/helpers.ts";
  * @template Output The type produced once `Data` is supplied.
  */
 export interface DataFunc<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   Data = any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   Args extends any[] = any[],
   Output = unknown,
 > {
@@ -21,10 +21,10 @@ export interface DataFunc<
 type DataFuncData<Fn extends DataFunc> =
   Fn extends DataFunc<infer Data> ? Data : never;
 type DataFuncArgs<Fn extends DataFunc> =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   Fn extends DataFunc<any, infer Args> ? Args : never;
 type DataFuncOutput<Fn extends DataFunc> =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   Fn extends { (...args: any[]): infer R }
     ? ReturnType<Extract<R, AnyArgFn>>
     : never;
@@ -63,7 +63,7 @@ export const pipeable = <Fn extends DataFunc>(
  * @param {(args: Args | [Data, ...Args]) => boolean} [isDataFirst] Decides, from the raw call arguments, whether the call was made data-first.
  * @returns {DataFunc<Data, Args, Output>} A function supporting both the data-first and data-last call styles.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export const simplePipeable = <Data, Args extends any[], Output>(
   fn: (data: Data, ...args: Args) => Output,
   isDataFirst?: (args: Args | [Data, ...Args]) => boolean

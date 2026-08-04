@@ -65,36 +65,32 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.17.1",
+  "packageManager": "pnpm@11.20.0",
   "scripts": {
     "test": "vitest run --passWithNoTests",
     "build": "tsc",
-    "lint": "eslint ./src",
+    "lint": "oxlint src",
     "typecheck": "tsc --noEmit",
-    "findissues": "yarn typecheck && yarn lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "findissues": "pnpm typecheck && pnpm lint && pnpm format:check",
     "bump-and-release": "./scripts/bump-and-release.sh",
     "release": "./scripts/release.sh",
     "publint": "publint run",
     "attw": "attw --pack .",
     "check-output": "./scripts/check-output.sh",
-    "prepublish": "yarn typecheck && yarn lint && yarn build && yarn test && yarn publint && yarn check-output"
+    "prepublish": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build && pnpm test && pnpm publint && pnpm check-output"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.2",
-    "@eslint/compat": "^2.1.0",
-    "@eslint/js": "^10.0.1",
-    "@stylistic/eslint-plugin": "^5.10.0",
-    "@vitest/coverage-v8": "4.1.6",
-    "eslint": "^10.4.0",
-    "eslint-config-prettier": "^10.1.8",
-    "happy-dom": "^20.10.6",
-    "prettier": "^3.8.3",
-    "publint": "^0.3.21",
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@vitest/coverage-v8": "4.1.10",
+    "happy-dom": "^20.11.1",
+    "oxlint": "^1.76.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "prettier": "^3.9.6",
+    "publint": "^0.3.22",
     "typescript": "^7.0.2",
-    "typescript-eslint": "^8.59.4",
-    "vitest": "^4.1.6"
-  },
-  "resolutions": {
-    "@arethetypeswrong/core@npm:0.18.2": "patch:@arethetypeswrong/core@npm%3A0.18.2#~/.yarn/patches/@arethetypeswrong-core-npm-0.18.2-d9050fce15.patch"
+    "vitest": "^4.1.10"
   }
 }

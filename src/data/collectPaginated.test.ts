@@ -58,9 +58,8 @@ describe("collectPaginated", () => {
 
   it("works with objects not just primitives", async () => {
     type Item = { id: number; name: string };
-    const getPage = vi.fn(
-      (page: number): Promise<Item[]> =>
-        Promise.resolve(page === 1 ? [{ id: page, name: `item-${page}` }] : [])
+    const getPage = vi.fn((page: number): Promise<Item[]> =>
+      Promise.resolve(page === 1 ? [{ id: page, name: `item-${page}` }] : [])
     );
 
     const result = await collectPaginated<Item>(1, getPage);

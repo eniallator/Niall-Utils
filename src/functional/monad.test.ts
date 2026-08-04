@@ -40,7 +40,7 @@ describe("Monad", () => {
 
   it("map with function returning undefined works", () => {
     const m = Monad.from(1).map(() => undefined);
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    // oxlint-disable-next-line typescript/no-confusing-void-expression
     expect(m.get()).toBeUndefined();
   });
 
@@ -57,7 +57,7 @@ describe("Monad", () => {
 
   it("flatMap with function returning Monad of undefined works", () => {
     const m = Monad.from(1).flatMap(() => Monad.from(undefined));
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    // oxlint-disable-next-line typescript/no-confusing-void-expression
     expect(m.get()).toBeUndefined();
   });
 

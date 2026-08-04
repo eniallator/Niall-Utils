@@ -1,7 +1,5 @@
-import { tuple } from "../core/tuple.ts";
+import { tuple, type FillTuple } from "../core/tuple.ts";
 import { simplePipeable } from "../functional/pipeable.ts";
-
-import type { FillTuple } from "../core/tuple.ts";
 
 /**
  * Converts cartesian coordinates to polar coordinates.

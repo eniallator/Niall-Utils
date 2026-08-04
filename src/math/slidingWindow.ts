@@ -1,7 +1,6 @@
+import type { FillTuple } from "../core/tuple.ts";
 import { pipeable } from "../functional/pipeable.ts";
 import { positiveMod } from "./maths.ts";
-
-import type { FillTuple } from "../core/tuple.ts";
 
 /**
  * Slides a fixed-size window over an array, returning a tuple for each window position. Pipeable: call as
