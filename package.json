@@ -86,10 +86,10 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@vitest/coverage-v8": "4.1.10",
     "happy-dom": "^20.11.1",
-    "oxlint": "^1.76.0",
+    "oxlint": "^1.77.0",
     "oxlint-tsgolint": "^7.0.2001",
     "prettier": "^3.9.6",
-    "publint": "^0.3.22",
+    "publint": "^0.3.23",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }
