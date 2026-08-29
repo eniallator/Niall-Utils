@@ -74,23 +74,23 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "findissues": "pnpm typecheck && pnpm lint && pnpm format:check",
-    "bump-and-release": "./scripts/bump-and-release.sh",
-    "release": "./scripts/release.sh",
+    "bump-and-release": "bash scripts/bump-and-release.sh",
+    "release": "bash scripts/release.sh",
     "publint": "publint run",
     "attw": "attw --pack .",
-    "check-output": "./scripts/check-output.sh",
+    "check-output": "bash scripts/check-output.sh",
     "prepublish": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build && pnpm test && pnpm publint && pnpm check-output"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/coverage-v8": "4.1.11",
     "happy-dom": "^20.11.1",
-    "oxlint": "^1.77.0",
+    "oxlint": "^1.80.0",
     "oxlint-tsgolint": "^7.0.2001",
     "prettier": "^3.9.6",
-    "publint": "^0.3.23",
+    "publint": "^0.3.24",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }
