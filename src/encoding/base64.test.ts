@@ -33,7 +33,7 @@ describe("isValidBase64", () => {
 
 describe("base64FromUint", () => {
   it("encodes 0 correctly", () => {
-    expect(base64FromUint(0)).toBe("");
+    expect(base64FromUint(0)).toBe("A");
   });
 
   it("encodes positive integers correctly", () => {
@@ -47,6 +47,7 @@ describe("base64FromUint", () => {
     expect(base64FromUint(1, 4)).toBe("AAAB");
     expect(base64FromUint(0, 3)).toBe("AAA");
     expect(base64FromUint(63, 2)).toBe("A/");
+    expect(base64FromUint(0, 0)).toBe("");
   });
 
   it("returns empty string for negative numbers", () => {

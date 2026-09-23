@@ -98,11 +98,8 @@ interface DigitLookup {
 export type StringToNumber<
   Str extends string,
   Acc extends number = 0,
-> = Str extends `${infer Digit}${infer Rest}`
-  ? StringToNumber<
-      Rest,
-      Add<DigitLookup[Extract<Digit, keyof DigitLookup>], Multiply<Acc, 10>>
-    >
+> = Str extends `${infer Digit extends keyof DigitLookup}${infer Rest}`
+  ? StringToNumber<Rest, Add<DigitLookup[Digit], Multiply<Acc, 10>>>
   : Acc;
 
 /**

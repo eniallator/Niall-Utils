@@ -74,4 +74,24 @@ describe("partition", () => {
     expect(evens).toEqual([2, 4, 6, 8]);
     expect(odds).toEqual([1, 3, 5, 7]);
   });
+
+  it("narrows the first group's type when given a type guard", () => {
+    const items: (number | string)[] = [1, "a", 2, "b", 3];
+    const [numbers, strings] = partition(
+      items,
+      (item): item is number => typeof item === "number"
+    );
+    expect(numbers).toEqual([1, 2, 3]);
+    expect(strings).toEqual(["a", "b"]);
+  });
+
+  it("narrows the first group's type when given a type guard in data-last style", () => {
+    const items: (number | string)[] = [1, "a", 2, "b", 3];
+    const partitionNumbers = partition(
+      (item: number | string): item is number => typeof item === "number"
+    );
+    const [numbers, strings] = partitionNumbers(items);
+    expect(numbers).toEqual([1, 2, 3]);
+    expect(strings).toEqual(["a", "b"]);
+  });
 });

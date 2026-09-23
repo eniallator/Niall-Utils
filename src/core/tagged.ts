@@ -24,6 +24,6 @@ export type Untag<T extends Tagged<unknown, string>> =
  * @returns {(value: Untag<T>) => T} A function that casts an untagged value to the tagged type `T`.
  */
 export const unsafeTag =
-  <T extends Tagged<unknown, string>>() =>
-  (value: Untag<T>): T =>
+  <T extends Tagged<unknown, string>>(): ((value: Untag<T>) => T) =>
+  value =>
     value as T;

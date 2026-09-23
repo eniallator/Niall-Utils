@@ -13,5 +13,5 @@ export const raise = (error: Error): never => {
  * @param {never} value The value expected to be exhausted.
  * @returns {never} Never returns; always throws.
  */
-export const checkExhausted = (value: never) =>
+export const checkExhausted = (value: never): never =>
   raise(new Error(`Value not exhausted: ${JSON.stringify(value)}`));

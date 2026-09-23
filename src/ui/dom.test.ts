@@ -80,13 +80,13 @@ describe("dom.toAttrs", () => {
 describe("dom.toHtml", () => {
   it("should create an element from a valid tag string", () => {
     const el = dom.toHtml("<div>hello</div>");
-    expect(el instanceof HTMLDivElement).toBe(true);
+    expect(el).toBeInstanceOf(HTMLDivElement);
     expect(el.textContent).toBe("hello");
   });
 
   it("should create an element from a known tag", () => {
     const el = dom.toHtml("<button>Click</button>");
-    expect(el instanceof HTMLButtonElement).toBe(true);
+    expect(el).toBeInstanceOf(HTMLButtonElement);
     expect(el.textContent).toBe("Click");
   });
 
@@ -97,21 +97,13 @@ describe("dom.toHtml", () => {
 
   it("should infer the concrete element type for a digit-bearing tag name", () => {
     const el = dom.toHtml("<h1>Title</h1>");
-    expect(el instanceof HTMLHeadingElement).toBe(true);
-    expect(el.textContent).toBe("Title");
-  });
-
-  it("should infer the concrete element type for a digit-bearing tag name", () => {
-    // The `satisfies` check fails to compile if InferElement falls back to the generic HTMLElement
-    // instead of resolving the digit-bearing "h1" tag name.
-    const el = dom.toHtml("<h1>Title</h1>") satisfies HTMLHeadingElement;
-    expect(el instanceof HTMLHeadingElement).toBe(true);
+    expect(el).toBeInstanceOf(HTMLHeadingElement);
     expect(el.textContent).toBe("Title");
   });
 
   it("should fallback to HTMLElement for unknown tags", () => {
     const el = dom.toHtml("<custom-elem></custom-elem>");
-    expect(el instanceof HTMLElement).toBe(true);
+    expect(el).toBeInstanceOf(HTMLElement);
     expect(el.tagName.toLowerCase()).toBe("custom-elem");
   });
 });

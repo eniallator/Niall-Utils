@@ -25,8 +25,8 @@ type DataFuncArgs<Fn extends DataFunc> =
   Fn extends DataFunc<any, infer Args> ? Args : never;
 type DataFuncOutput<Fn extends DataFunc> =
   // oxlint-disable-next-line typescript/no-explicit-any
-  Fn extends { (...args: any[]): infer R }
-    ? ReturnType<Extract<R, AnyArgFn>>
+  Fn extends ((...args: any[]) => infer R extends AnyArgFn)
+    ? ReturnType<R>
     : never;
 
 /**
@@ -46,7 +46,7 @@ export const pipeable = <Fn extends DataFunc>(
   isDataFirst: (
     args: DataFuncArgs<Fn> | [DataFuncData<Fn>, ...DataFuncArgs<Fn>]
   ) => boolean = args => dataFirst.length === args.length
-) =>
+): Fn =>
   ((...args: DataFuncArgs<Fn> | [DataFuncData<Fn>, ...DataFuncArgs<Fn>]) =>
     isDataFirst(args)
       ? dataFirst(...(args as [DataFuncData<Fn>, ...DataFuncArgs<Fn>]))
@@ -67,4 +67,4 @@ export const pipeable = <Fn extends DataFunc>(
 export const simplePipeable = <Data, Args extends any[], Output>(
   fn: (data: Data, ...args: Args) => Output,
   isDataFirst?: (args: Args | [Data, ...Args]) => boolean
-) => pipeable<DataFunc<Data, Args, Output>>(fn, isDataFirst);
+): DataFunc<Data, Args, Output> => pipeable(fn, isDataFirst);

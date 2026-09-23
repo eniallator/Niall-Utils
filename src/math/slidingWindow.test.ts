@@ -14,7 +14,7 @@ describe("slidingWindow", () => {
   });
 
   it("respects the step value when stepping through the array", () => {
-    const result = slidingWindow([1, 2, 3, 4, 5], 2, 2);
+    const result = slidingWindow([1, 2, 3, 4, 5], 2, 0, 2);
     expect(result).toEqual([
       [1, 2],
       [3, 4],
@@ -23,7 +23,7 @@ describe("slidingWindow", () => {
   });
 
   it("supports a custom start offset", () => {
-    const result = slidingWindow(["a", "b", "c", "d"], 2, 1, 2);
+    const result = slidingWindow(["a", "b", "c", "d"], 2, 2, 1);
     expect(result).toEqual([
       ["c", "d"],
       ["d", "a"],
@@ -37,16 +37,28 @@ describe("slidingWindow", () => {
   });
 
   it("does not wrap past the end when non-circular", () => {
-    const result = slidingWindow([1, 2, 3], 2, 1, 0, false);
-    expect(result).toEqual([[1, 2]]);
+    const result = slidingWindow([1, 2, 3], 2, 0, 1, false);
+    expect(result).toEqual([
+      [1, 2],
+      [2, 3],
+    ]);
+  });
+
+  it("does not miss the final window when the step evenly divides a non-circular array", () => {
+    const result = slidingWindow([1, 2, 3, 4, 5, 6], 2, 0, 2, false);
+    expect(result).toEqual([
+      [1, 2],
+      [3, 4],
+      [5, 6],
+    ]);
   });
 
   it("returns no windows when non-circular and the array is too short", () => {
-    expect(slidingWindow([1], 2, 1, 0, false)).toEqual([]);
+    expect(slidingWindow([1], 2, 0, 1, false)).toEqual([]);
   });
 
   it("supports negative start offsets by wrapping backwards", () => {
-    expect(slidingWindow([1, 2, 3], 2, 1, -1)).toEqual([
+    expect(slidingWindow([1, 2, 3], 2, -1, 1)).toEqual([
       [3, 1],
       [1, 2],
       [2, 3],
@@ -54,18 +66,21 @@ describe("slidingWindow", () => {
   });
 
   it("does not wrap a negative start when non-circular", () => {
-    const result = slidingWindow([1, 2, 3], 2, 1, -1, false);
-    expect(result).toEqual([[undefined, 1]]);
+    const result = slidingWindow([1, 2, 3], 2, -1, 1, false);
+    expect(result).toEqual([
+      [undefined, 1],
+      [1, 2],
+    ]);
   });
 
   it("throws instead of hanging when step is 0", () => {
-    expect(() => slidingWindow([1, 2, 3], 2, 0)).toThrow(
+    expect(() => slidingWindow([1, 2, 3], 2, 0, 0)).toThrow(
       "step must be greater than 0, got 0"
     );
   });
 
   it("throws instead of hanging when step is negative", () => {
-    expect(() => slidingWindow([1, 2, 3], 2, -1)).toThrow(
+    expect(() => slidingWindow([1, 2, 3], 2, 0, -1)).toThrow(
       "step must be greater than 0, got -1"
     );
   });

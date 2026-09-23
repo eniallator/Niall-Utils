@@ -6,7 +6,7 @@ import type { RecursionLimit } from "../math/maths.ts";
  * @param {...T} tuple The values to collect into a tuple.
  * @returns {T} The arguments as a tuple.
  */
-export const tuple = <const T extends unknown[]>(...tuple: T) => tuple;
+export const tuple = <const T extends unknown[]>(...tuple: T): T => tuple;
 
 /**
  * Builds a fixed-length tuple type of `N` elements, each of type `T`.

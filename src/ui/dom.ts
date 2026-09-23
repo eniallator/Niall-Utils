@@ -48,7 +48,7 @@ const get = <E extends HTMLElement>(
 
 /** Escapes the characters that are special inside a double-quoted HTML attribute value: `&` and `"`. */
 const escapeAttrValue = (val: string): string =>
-  val.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+  val.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 
 /**
  * Serializes an attributes record into an HTML attribute string, e.g. `{ id: "foo", disabled: null }`
@@ -69,11 +69,9 @@ type InferElement<S extends string> =
   MatchString<
     Lowercase<S>,
     [Skip<Whitespace>, Skip<"<", 1>, Skip<Whitespace>, Capture<AlphaNumeric>]
-  > extends infer Result
-    ? Result extends keyof HTMLElementTagNameMap
-      ? HTMLElementTagNameMap[Result]
-      : HTMLElement
-    : never;
+  > extends infer Result extends keyof HTMLElementTagNameMap
+    ? HTMLElementTagNameMap[Result]
+    : HTMLElement;
 
 /**
  * Parses an HTML string into a single element, inferring the concrete element type (e.g. `HTMLInputElement`)

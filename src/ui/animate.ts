@@ -18,8 +18,12 @@ interface SequenceResult<F> {
  * @returns {(currTotal: number) => SequenceResult<F>} A function that, given a running total, returns the current `{ frame, delta, index }`.
  */
 export const sequence =
-  <F>(frames: F[], perFrame: number, loop: boolean = true) =>
-  (currTotal: number): SequenceResult<F> => {
+  <F>(
+    frames: F[],
+    perFrame: number,
+    loop: boolean = true
+  ): ((currTotal: number) => SequenceResult<F>) =>
+  currTotal => {
     const rawIndex = Math.floor(currTotal / perFrame);
     const index = loop
       ? positiveMod(rawIndex, frames.length)
@@ -29,12 +33,11 @@ export const sequence =
       index,
       frame:
         frames.at(index) ?? raise(new Error(`Frame index not found: ${index}`)),
-      delta: loop
-        ? positiveMod(currTotal, perFrame) / perFrame
-        : rawIndex < 0
-          ? 0
-          : rawIndex < frames.length
-            ? positiveMod(currTotal, perFrame) / perFrame
+      delta:
+        loop || (rawIndex >= 0 && rawIndex < frames.length)
+          ? positiveMod(currTotal, perFrame) / perFrame
+          : rawIndex < 0
+            ? 0
             : 1,
     };
   };
@@ -54,9 +57,9 @@ export const timeSequence = <F>(
   msPerFrame: number,
   loop: boolean = true,
   start: Date = new Date()
-) => {
+): ((now?: Date) => SequenceResult<F>) => {
   const seq = sequence(frames, msPerFrame, loop);
-  return (now: Date = new Date()) => seq(now.getTime() - start.getTime());
+  return (now = new Date()) => seq(now.getTime() - start.getTime());
 };
 
 /**
@@ -80,7 +83,7 @@ export const multiSequence = <S extends Record<string, unknown[]>>(
   let last = initial;
   let seq = sequence(getFrames(initial), perFrame, true);
 
-  return (target: keyof S, total: number) => {
+  return (target, total) => {
     if (target !== last) {
       last = target;
       seq = sequence(getFrames(target), perFrame, true);
@@ -110,7 +113,7 @@ export const timeMultiSequence = <S extends Record<string, unknown[]>>(
   let switchedAt = start;
   let last = initial;
 
-  return (target: keyof S, now: Date = new Date()) => {
+  return (target, now = new Date()) => {
     if (target !== last) {
       last = target;
       switchedAt = now;

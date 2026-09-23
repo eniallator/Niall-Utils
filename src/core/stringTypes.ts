@@ -1,9 +1,10 @@
+import type { Range } from "../data/range.ts";
 import type { Increment } from "../math/maths.ts";
 
 /** A single whitespace character. */
 export type Whitespace = " " | "\t" | "\n" | "\r";
 /** A single decimal digit character. */
-export type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+export type Digit = `${Range<10>[number]}`;
 /** A single lowercase Latin letter character. */
 export type AlphabetLower =
   | "a"
@@ -140,13 +141,13 @@ type ApplyMatch<
 type ParseTokens<
   Str extends string,
   Tokens extends AnyMatch[],
-> = Tokens extends [infer Head, ...infer Tail]
-  ? ApplyMatch<Str, Extract<Head, AnyMatch>> extends infer Result
+> = Tokens extends [
+  infer Head extends AnyMatch,
+  ...infer Tail extends AnyMatch[],
+]
+  ? ApplyMatch<Str, Head> extends infer Result
     ? Result extends ParserState
-      ? CombineState<
-          Result,
-          ParseTokens<Result["rest"], Extract<Tail, AnyMatch[]>>
-        >
+      ? CombineState<Result, ParseTokens<Result["rest"], Tail>>
       : Result
     : never
   : { out: ""; rest: Str };
@@ -182,8 +183,8 @@ type StringSplitNonEmpty<
     ? StringSplitNonEmpty<
         Rest,
         Sep,
-        Parts extends [...infer Head, infer Tail]
-          ? [...Head, `${Extract<Tail, string>}${Char}`]
+        Parts extends [...infer Head, infer Tail extends string]
+          ? [...Head, `${Tail}${Char}`]
           : [Char]
       >
     : Parts;
