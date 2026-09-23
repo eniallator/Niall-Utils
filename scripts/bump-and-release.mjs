@@ -5,7 +5,9 @@ import { release } from "./release.mjs";
 runInherit("pnpm", ["login"]);
 runInherit("pnpm", ["version", "minor"]);
 
-const { version } = await import("../package.json", {
+const {
+  default: { version },
+} = await import("../package.json", {
   with: { type: "json" },
 });
 

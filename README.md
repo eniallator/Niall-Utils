@@ -5,7 +5,7 @@ Small collection of my utilities: DOM helpers, functional utilities, small math 
 [![npm version](https://img.shields.io/npm/v/niall-utils.svg)](https://www.npmjs.com/package/niall-utils)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI](https://github.com/eniallator/Niall-Utils/actions/workflows/ci.yml/badge.svg)](https://github.com/eniallator/Niall-Utils/actions/workflows/ci.yml)
-[![Node.js >= 20](https://img.shields.io/badge/Node.js-%3E=20-brightgreen.svg)](https://nodejs.org/)
+[![Node.js >= 22.13](https://img.shields.io/badge/Node.js-%3E=22.13-brightgreen.svg)](https://nodejs.org/)
 
 ## Installation
 
@@ -44,62 +44,73 @@ try {
 
 ## API Summary
 
-- **DOM (`dom`)**
-  - `get(selector, base?)` - select an element or throw.
-  - `toHtml(htmlString)` - create an HTMLElement from a string template.
-  - `toAttrs(attrs)` - serialize attribute map to HTML attrs.
-  - `addListener(el, event, fn)` - strongly typed `addEventListener` wrapper.
+- **DOM (`ui/dom`)** - exposed as the `dom` object:
+  - `dom.get(selector, base?)` - select an element or throw.
+  - `dom.toHtml(htmlString)` - create an HTMLElement from a string template, inferring its element type.
+  - `dom.toAttrs(attrs)` - serialize an attribute map to an HTML attribute string.
+  - `dom.addListener(el, event, fn)` - strongly typed `addEventListener` wrapper.
 
-- **Utilities (`utils`)**
-  - `raise(error)` - throw helper to help with typed `never` flows.
+- **Utilities (`core/utils`)**
+  - `raise(error)` - throw as an expression, typed `never`.
   - `checkExhausted(value: never)` - helper for exhaustive switches.
 
-- **Attempt helpers (`attempt`)**
+- **Attempt helpers (`core/attempt`)**
   - `attempt(fn, onError?)` - run a synchronous unsafe function with optional recovery.
   - `attemptAsync(fn, onError?)` - run an async unsafe function with optional recovery.
 
-- **Maths & geometry (`maths`)**
-  - `cartesianToPolar`, `polarToCartesian`, `positiveMod`, `clamp` and supporting numeric type helpers.
+- **Maths & geometry (`math/maths`)**
+  - `cartesianToPolar`, `polarToCartesian`, `positiveMod`, `clamp`.
+  - `Add`, `Subtract`, `Multiply`, `Increment`, `Decrement`, `StringToNumber` - type-level arithmetic.
 
-- **Color utilities (`color`)**
+- **Sliding window (`math/slidingWindow`)**
+  - `slidingWindow(arr, windowSize, start?, step?, circular?)` - extract fixed-size window tuples (pipeable).
+
+- **Color utilities (`ui/color`)**
+  - `parseHexChannels(color)` - parse a hex color into `[r, g, b]` channels.
   - `lerpColors`, `createWeightedGradient` - color interpolation and weighted gradient builder.
 
-- **Animation helpers (`animate`)**
-  - `sequence`, `timeSequence`, `multiSequence` - lightweight frame sequence utilities.
+- **Animation helpers (`ui/animate`)**
+  - `sequence`, `timeSequence`, `multiSequence`, `timeMultiSequence` - lightweight frame sequence utilities.
 
 - **Data helpers (`data`)**
   - `zip` - merge arrays index-wise with bounds checking.
   - `typedToEntries`, `typedFromEntries`, `typedKeys` - typed object-to-entry conversions.
-  - `mapObject`, `mapRecord` - map over object entries/records.
-  - `filterObject` - filter object entries by predicate.
-  - `generator` - create a Generator from a callback.
-  - `getAllPages(getPage, perPage)` - fetch all pages from a paginated API.
+  - `mapObject`, `mapRecord`, `filterObject` - map/filter over object entries.
+  - `pick`, `omit` - select or drop object keys (pipeable).
+  - `partition(arr, predicate)` - split an array in two, narrowing with type-guard predicates (pipeable).
+  - `memoize(fn, toCacheKey?, maxSize?)` - cache results, with optional LRU eviction.
+  - `generator(callback)` - create a Generator from a callback, stopping at the first `null`/`undefined`.
+  - `collectPaginated(perPage, getPage, hasMoreData?)` - fetch every page from a paginated API.
+  - `typedRange(limit)`, `Range<N>` - build `[0, 1, ..., N - 1]` as an exact tuple type.
 
 - **Tuple helpers (`core/tuple`)**
   - `tuple(...values)` - create a typed tuple.
-  - `FillTuple`, `NonEmptyArray` - type-level tuple utilities.
+  - `FillTuple` - fixed-length tuple type.
 
-- **Sliding window (`math/slidingWindow`)**
-  - `slidingWindow(arr, size, step?, start?, circular?)` - extract sliding windows from arrays.
-
-- **Type helpers**
-  - `UnionToPartial` - destructure types where keys only appear in _some_ cases.
-  - `unionToTuple`, `unionToPartial` - type-level utilities for safer inference and discriminated unions.
-  - `stringTypes` - string literal types (`Whitespace`, `Digit`, `AlphabetLower`, etc.).
+- **Type helpers (`core`)**
+  - `UnionToPartial` - destructure types where keys only appear in _some_ union members.
+  - `UnionToTuple` - convert a union type to a tuple of its members.
+  - String types (`Whitespace`, `Digit`, `AlphabetLower`, `AlphaNumeric`, etc.) plus `MatchString` and
+    `StringSplit` for type-level string parsing.
 
 - **Tagged types (`core/tagged`)**
   - `Tagged<Type, Name>` - branded type for compile-time safety.
   - `Untag<T>` - extract the underlying type from a tagged type.
-  - `unsafeTag()` - create an unsafe tag function.
+  - `unsafeTag()` - create an unchecked tagging function.
 
-- **Functional & option/monad helpers**
-  - `Monad<A>` class - monadic wrapper with `from`, `map`, `flatMap`, `tupled`.
-  - `Option<A>` class - nullable value wrapper with `some`, `none`, `from`, `getOrNull`.
+- **Functional helpers (`functional`)**
+  - `Monad<A>` class - monadic wrapper with `from`, `map`, `flatMap`, `tap`, `tupled`, `get`, `toOption`.
+  - `Option<A>` class - nullable value wrapper with `some`, `none`, `from`, `map`, `flatMap`, `filter`,
+    `fold`, `getOrElse`, `getOrNull`, `getOrThrow`, `toMonad`, and more.
   - `mapFilter(arr, callback)` - filter and map in one pass, supporting Option returns.
   - `mapFind(arr, callback)` - find first matching element with mapping, supporting Option returns.
   - `mapAccumulate(arr, initial, callback)` - accumulate over an array with state.
+  - `NonEmptyArray` - array type with at least one element.
+  - `pipe(data, ...fns)` - chain functions left to right.
+  - `pipeable`, `simplePipeable` - make a data-first function callable as `fn(data, ...args)` or
+    `fn(...args)(data)`.
 
-- **Timing helpers**
+- **Timing helpers (`timing`)**
   - `debounce` - delay function execution until after a wait period.
   - `throttled`, `throttledAsync` - limit function execution to once per interval.
 
@@ -119,14 +130,21 @@ try {
 - **`src/core/unionToPartial.ts`** - destructure types with partial keys.
 - **`src/core/unionToTuple.ts`** - convert union types to tuple types.
 - **`src/core/utils.ts`** - `raise` and `checkExhausted`.
-- **`src/data/entries.ts`** - typed object-to-entry conversions (`typedToEntries`, `typedFromEntries`, `mapObject`, etc.).
+- **`src/data/collectPaginated.ts`** - fetch all pages from a paginated API.
+- **`src/data/entries.ts`** - typed object-to-entry conversions (`typedToEntries`, `typedFromEntries`, `mapObject`, `pick`, `omit`, etc.).
 - **`src/data/generate.ts`** - generator helper.
-- **`src/data/getAllPages.ts`** - fetch all pages from a paginated API.
+- **`src/data/memoize.ts`** - memoization with optional LRU eviction.
+- **`src/data/partition.ts`** - split an array in two by a predicate.
+- **`src/data/range.ts`** - `typedRange` and the `Range<N>` tuple type.
 - **`src/data/zip.ts`** - index-wise array merging with bounds checking.
 - **`src/encoding/base64.ts`** - `Base64` branded type, `isValidBase64`, `base64FromUint`, `base64ToUint`.
 - **`src/format/formatLocaleDate.ts`** - locale date formatting.
+- **`src/functional/map.ts`** - `mapFilter`, `mapFind`, `mapAccumulate`.
 - **`src/functional/monad.ts`, `src/functional/option.ts`** - small functional primitives.
+- **`src/functional/pipe.ts`, `src/functional/pipeable.ts`** - `pipe` and the data-first/data-last `pipeable` wrapper.
 - **`src/math/maths.ts`** - geometry helpers (`cartesianToPolar`, `polarToCartesian`), `clamp`, `positiveMod` and numeric type utilities.
+- **`src/math/slidingWindow.ts`** - sliding window tuples over an array.
+- **`src/timing/debounce.ts`, `src/timing/throttled.ts`** - rate-limiting helpers.
 - **`src/ui/animate.ts`** - lightweight animation and timing helpers.
 - **`src/ui/color.ts`** - color interpolation and gradient utilities.
 - **`src/ui/dom.ts`** - DOM helpers and small HTML helpers.
@@ -155,7 +173,7 @@ import { animate, color, dom } from "niall-utils/ui";
 
 | Environment | Supported Versions            |
 | ----------- | ----------------------------- |
-| Node.js     | >= 20                         |
+| Node.js     | >= 22.13                      |
 | Browsers    | All modern browsers (ES2020+) |
 
 **Note:** The `ui/dom` module depends on browser DOM APIs and will not work in Node.js environments without a DOM polyfill (e.g., `happy-dom`).

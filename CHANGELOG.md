@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-09-23
+
+### Added
+
+- `typedRange` and the `Range<N>` type for building a `[0, 1, ..., N - 1]` tuple (`data/range.ts`)
+- An optional `hasMoreData(data, page)` parameter for `collectPaginated`, to customise when to stop fetching
+  (defaults to the previous "last page was full" check)
+- `partition` overloads for type-guard predicates, narrowing the result to `[S[], Exclude<T, S>[]]`
+
+### Changed
+
+- **Breaking:** `slidingWindow`'s `start` and `step` parameters have swapped places; the signature is now
+  `slidingWindow(arr, windowSize, start?, step?, circular?)`
+- **Breaking:** `base64FromUint(0)` now returns `"A"` (the first base64 character) instead of `""`
+- `generator`'s type parameter no longer accepts nullable types, matching its runtime behaviour of stopping at
+  the first `null`/`undefined`
+- `parseHexChannels` now parses the hex digits as a single 24-bit value instead of matching two-digit pairs
+- Release scripts rewritten from Bash to Node (`scripts/*.mjs`) so they run on Windows; `check-output` now
+  reads the packed tarball with the `tar` package instead of the `tar`/`jq` CLIs
+- Bumped pnpm to 12.5.1
+- Bumped dependencies (`vitest`, `@vitest/coverage-v8`, `happy-dom`, `oxlint`, `oxlint-tsgolint`, `prettier`,
+  `publint`)
+
+### Fixed
+
+- `slidingWindow` no longer drops the final window when non-circular (e.g. `[1, 2, 3, 4, 5, 6]` with a window
+  size and step of `2` now includes `[5, 6]`)
+
 ## [2.0.1] - 2026-08-07
 
 ### Fixed

@@ -25,7 +25,7 @@ settling for the first working version:
 ## Commands
 
 ```bash
-pnpm install         # install dependencies (pnpm via Corepack, Node >= 20)
+pnpm install         # install dependencies (pnpm via Corepack, Node >= 22.13)
 pnpm build           # tsc compile src/ -> dist/
 pnpm typecheck       # tsc --noEmit
 pnpm lint            # oxlint src (type-aware, via oxlint-tsgolint; see .oxlintrc.json)

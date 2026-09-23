@@ -10,7 +10,7 @@ Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) in all int
 
 ### Prerequisites
 
-- Node.js 18 or higher
+- Node.js 22.13 or higher
 - pnpm (managed via Corepack — see `packageManager` in `package.json`)
 - Basic familiarity with TypeScript and runtime type checking concepts
 
@@ -71,7 +71,9 @@ Tests are written using Vitest. Please ensure all tests pass before submitting a
 pnpm typecheck
 ```
 
-Verify there are no TypeScript compilation errors (tests are allowed).
+Verify there are no TypeScript compilation errors. This only covers `tsconfig.json`, which excludes test
+files; they're typechecked via `tsconfig.test.json` as part of `pnpm lint`, or directly with
+`tsc --noEmit -p tsconfig.test.json`.
 
 ### Linting
 
@@ -89,7 +91,7 @@ pnpm format        # writes formatting fixes, including organizing imports
 pnpm format:check  # verifies formatting without writing (used in CI)
 ```
 
-The project uses Prettier, plus `prettier-plugin-organize-imports` to sort/dedupe imports on format.
+The project uses Prettier, plus `@ianvs/prettier-plugin-sort-imports` to sort/dedupe imports on format.
 
 ### Finding Issues
 
@@ -116,15 +118,16 @@ Follow these guidelines when contributing:
 
 - **Write tests** for any new functionality or bug fixes
 - **Update existing tests** if you change behavior
-- **Keep test coverage high** — aim for comprehensive coverage of guard functions
-- Test files follow the pattern `*.test.ts` and use Vitest syntax
+- **Keep full test coverage** — `pnpm test` enforces 100% statement/branch/function/line coverage, evaluated
+  per file, so every new file needs full coverage on its own
+- Test files sit next to the file they test, follow the pattern `*.test.ts`, and use Vitest syntax
 
 Example test structure:
 
 ```typescript
 import { describe, expect, it } from "vitest";
 
-import { formatLocaleDate } from "./index";
+import { formatLocaleDate } from "./formatLocaleDate.ts";
 
 describe("formatLocaleDate", () => {
   it("formats single-digit months and days correctly", () => {
@@ -133,7 +136,7 @@ describe("formatLocaleDate", () => {
     expect(result).toBe("2023-03-07T08:09:10");
   });
 
-  it("throws an error for invalid date objects", () => {
+  it("returns 'Invalid Date' for invalid date objects", () => {
     const invalid = new Date("not a date");
     expect(formatLocaleDate(invalid)).toBe("Invalid Date");
   });
@@ -208,6 +211,8 @@ When reporting bugs or suggesting features:
 When contributing features:
 
 - Update [README.md](README.md) if adding new public APIs or major features such as new utility files
+- Export new files from their domain's `index.ts` barrel, otherwise they won't be part of the public API
+- Add an entry to [CHANGELOG.md](CHANGELOG.md) under the upcoming release
 - Consider the clarity of type definitions for end users
 
 ## Questions?
