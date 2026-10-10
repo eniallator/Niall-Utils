@@ -1,6 +1,6 @@
 {
   "name": "niall-utils",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Small collection of my web utilities",
   "author": "eniallator",
   "license": "Apache-2.0",
@@ -70,7 +70,7 @@
     "test": "vitest run --passWithNoTests",
     "build": "tsc",
     "lint": "oxlint src",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "findissues": "pnpm typecheck && pnpm lint && pnpm format:check",

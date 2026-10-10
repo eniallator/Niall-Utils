@@ -36,7 +36,7 @@ export const parseHexChannels = (color: string): FillTuple<number, 4> => {
  * @param {FillTuple<number, 4>} aChannels The starting color's channels.
  * @param {FillTuple<number, 4>} bChannels The ending color's channels.
  * @param {number} percent How far to interpolate from `aChannels` to `bChannels`, typically in `[0, 1]`.
- * @returns {string} The interpolated color, as a lowercase hex string without a leading `#`.
+ * @returns {string} The interpolated color, as a lowercase `rrggbbaa` hex string without a leading `#`.
  */
 export const lerpColors = (
   aChannels: FillTuple<number, 4>,
@@ -56,7 +56,7 @@ export const lerpColors = (
  * `colorPercent` maps onto colors proportionally to each color's weight rather than assuming equal spacing.
  * Each stop's color is parsed to channels once, up front, rather than being re-parsed on every call to the
  * returned function.
- * @param {readonly [color: string, weight: number][]} gradient The `[color, weight]` stops making up the gradient, in order.
+ * @param {ReadonlyNonEmptyArray<[color: string, weight: number]>} gradient The `[color, weight]` stops making up the gradient, in order.
  * @returns {(colorPercent: number) => string} A function that returns the interpolated color at a given position (in `[0, 1]`) along the gradient.
  * @throws {Error} If `gradient` is empty.
  */

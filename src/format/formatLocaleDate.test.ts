@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { formatLocaleDate } from "./formatLocaleDate.ts";
 
 describe("formatLocaleDate", () => {
-  it("throws an error for invalid date objects", () => {
+  it("returns null for invalid date objects", () => {
     const invalid = new Date("not a date");
     expect(formatLocaleDate(invalid)).toBeNull();
   });

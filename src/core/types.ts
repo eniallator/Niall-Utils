@@ -9,5 +9,5 @@ export type AsyncReturnType<Fn extends AnyArgFn<Promise<unknown>>> =
 /** A tuple-typed array guaranteed to contain at least one `T`. */
 export type NonEmptyArray<T> = [T, ...T[]];
 
-/** A tuple-typed array guaranteed to contain at least one `T`. */
+/** A readonly tuple-typed array guaranteed to contain at least one `T`. */
 export type ReadonlyNonEmptyArray<T> = readonly [T, ...(readonly T[])];

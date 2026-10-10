@@ -66,7 +66,7 @@ try {
   - `slidingWindow(arr, windowSize, start?, step?, circular?)` - extract fixed-size window tuples (pipeable).
 
 - **Color utilities (`ui/color`)**
-  - `parseHexChannels(color)` - parse a hex color into `[r, g, b]` channels.
+  - `parseHexChannels(color)` - parse a 6 digit hex color (with an optional alpha byte) into `[r, g, b, a]` channels, defaulting `a` to `255`.
   - `lerpColors`, `createWeightedGradient` - color interpolation and weighted gradient builder.
 
 - **Animation helpers (`ui/animate`)**
@@ -75,7 +75,7 @@ try {
 - **Data helpers (`data`)**
   - `zip` - merge arrays index-wise with bounds checking.
   - `typedToEntries`, `typedFromEntries`, `typedKeys` - typed object-to-entry conversions.
-  - `mapObject`, `mapRecord`, `filterObject` - map/filter over object entries.
+  - `mapObject`, `mapRecord`, `filterObject` - map/filter over object entries (pipeable).
   - `pick`, `omit` - select or drop object keys (pipeable).
   - `partition(arr, predicate)` - split an array in two, narrowing with type-guard predicates (pipeable).
   - `memoize(fn, toCacheKey?, maxSize?)` - cache results, with optional LRU eviction.
@@ -88,6 +88,8 @@ try {
   - `FillTuple` - fixed-length tuple type.
 
 - **Type helpers (`core`)**
+  - `NonEmptyArray`, `ReadonlyNonEmptyArray` - array types with at least one element.
+  - `AnyArgFn`, `AsyncReturnType` - function-shaped type helpers.
   - `UnionToPartial` - destructure types where keys only appear in _some_ union members.
   - `UnionToTuple` - convert a union type to a tuple of its members.
   - String types (`Whitespace`, `Digit`, `AlphabetLower`, `AlphaNumeric`, etc.) plus `MatchString` and
@@ -105,7 +107,6 @@ try {
   - `mapFilter(arr, callback)` - filter and map in one pass, supporting Option returns.
   - `mapFind(arr, callback)` - find first matching element with mapping, supporting Option returns.
   - `mapAccumulate(arr, initial, callback)` - accumulate over an array with state.
-  - `NonEmptyArray` - array type with at least one element.
   - `pipe(data, ...fns)` - chain functions left to right.
   - `pipeable`, `simplePipeable` - make a data-first function callable as `fn(data, ...args)` or
     `fn(...args)(data)`.
@@ -120,13 +121,14 @@ try {
   - `base64FromUint(n, length?)`, `base64ToUint(str)` - uint/base64 conversions.
 
 - **Date formatting (`format/formatLocaleDate`)**
-  - `formatLocaleDate(date, locale?)` - format a Date to ISO-like string with locale support.
+  - `formatLocaleDate(date, locale?)` - format a Date to ISO-like string with locale support, or `null` for an invalid date.
 
 ## Files of interest
 
 - **`src/core/attempt.ts`** - `attempt` and `attemptAsync`.
 - **`src/core/stringTypes.ts`** - string literal types (`Whitespace`, `Digit`, `AlphabetLower`, etc.).
 - **`src/core/tagged.ts`** - branded type utilities (`Tagged`, `Untag`, `unsafeTag`).
+- **`src/core/types.ts`** - shared function and array types (`AnyArgFn`, `AsyncReturnType`, `NonEmptyArray`, `ReadonlyNonEmptyArray`).
 - **`src/core/unionToPartial.ts`** - destructure types with partial keys.
 - **`src/core/unionToTuple.ts`** - convert union types to tuple types.
 - **`src/core/utils.ts`** - `raise` and `checkExhausted`.

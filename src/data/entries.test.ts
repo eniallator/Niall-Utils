@@ -108,6 +108,22 @@ describe("mapObject", () => {
   it("returns empty object for empty input", () => {
     expect(mapObject({}, ([k, v]) => [k, v])).toEqual({});
   });
+
+  it("supports the data-last call style", () => {
+    const double = mapObject<Record<string, number>, Record<string, number>>(
+      ([k, v]) => [k, v * 2]
+    );
+    expect(double({ a: 1, b: 2 })).toEqual({ a: 2, b: 4 });
+  });
+
+  it("includes symbol keys in the data-last call style when asked", () => {
+    const sym = Symbol("s");
+    const identity = mapObject<Record<symbol, number>, Record<symbol, number>>(
+      ([k, v]) => [k, v],
+      true
+    );
+    expect(identity({ [sym]: 1 })).toEqual({ [sym]: 1 });
+  });
 });
 
 describe("filterObject", () => {
@@ -123,6 +139,20 @@ describe("filterObject", () => {
 
   it("returns empty object if all filtered out", () => {
     expect(filterObject({ a: 1 }, () => false)).toEqual({});
+  });
+
+  it("supports the data-last call style", () => {
+    const big = filterObject<Record<string, number>>(([, v]) => v > 1);
+    expect(big({ a: 1, b: 2 })).toEqual({ b: 2 });
+  });
+
+  it("includes symbol keys in the data-last call style when asked", () => {
+    const sym = Symbol("s");
+    const keepAll = filterObject<Record<string | symbol, number>>(
+      () => true,
+      true
+    );
+    expect(keepAll({ [sym]: 1, a: 2 })).toEqual({ [sym]: 1, a: 2 });
   });
 });
 

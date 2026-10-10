@@ -71,9 +71,8 @@ Tests are written using Vitest. Please ensure all tests pass before submitting a
 pnpm typecheck
 ```
 
-Verify there are no TypeScript compilation errors. This only covers `tsconfig.json`, which excludes test
-files; they're typechecked via `tsconfig.test.json` as part of `pnpm lint`, or directly with
-`tsc --noEmit -p tsconfig.test.json`.
+Verify there are no TypeScript compilation errors. This typechecks both the source (`tsconfig.json`) and the
+test files (`tsconfig.test.json`).
 
 ### Linting
 

@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-10-10
+
+### Added
+
+- `toElement` now also parses SVG and MathML markup, inferring `SVG*Element`/`MathMLElement` types and wrapping
+  namespace-specific tags (anything but the `<svg>`/`<math>` roots) so they land in the correct namespace
+- `parseHexChannels` accepts an optional trailing alpha byte (`RRGGBBAA`) and an optional leading `#`
+- `NonEmptyArray` and `ReadonlyNonEmptyArray` types, plus `AnyArgFn` and `AsyncReturnType`, are exported from
+  `core` (`core/types.ts`)
+- `mapObject` and `filterObject` are now pipeable (`mapObject(mapper, includeSymbols?)(obj)`); the data-last
+  form needs explicit type arguments as the object type can't be inferred from the callback alone
+- `simplePipeable` now preserves the wrapped function's own parameter names in its returned type
+
+### Changed
+
+- **Breaking:** the `dom` object has been removed in favour of named exports: `dom.get` → `getElement`,
+  `dom.toHtml` → `toElement`, `dom.toAttrs` → `toAttrs`, `dom.addListener` → `addListener`
+- **Breaking:** `parseHexChannels` now returns `[r, g, b, a]` (alpha defaults to `255`) and only accepts a 6 or
+  8 digit hex string; `lerpColors` takes and interpolates 4 channels, so its output (and that of
+  `createWeightedGradient`) is now an `rrggbbaa` string
+- **Breaking:** `createWeightedGradient` takes a `ReadonlyNonEmptyArray`, so an empty gradient is a type error
+- **Breaking:** `formatLocaleDate` returns `null` instead of `"Invalid Date"` for an invalid date
+- **Breaking:** `NonEmptyArray` is now exported from `core` instead of `functional`
+- **Breaking:** the 21-argument overload of `pipe` was removed (20 functions is the maximum)
+- `Tagged`/`Untag` reworked around a single tag meta type
+- Clarified JSDoc across `entries`, `collectPaginated`, `base64FromUint`, `throttledAsync`, `positiveMod`,
+  `multiSequence`, and others
+- `pnpm typecheck` now also typechecks the test files
+- `release` now runs `prepublish` before committing and tagging
+- Bumped pnpm to 12.10.1
+- Bumped dependencies (`vitest`, `@vitest/coverage-v8`, `happy-dom`, `oxlint`, `oxlint-tsgolint`, `prettier`,
+  `publint`)
+
+### Fixed
+
+- Typo in the `stringTypes` parser error message ("Exact match count could not be satisfied")
+- `UnionToPartial` JSDoc example now shows the correct optional-`undefined` shape
+
 ## [3.0.0] - 2026-09-23
 
 ### Added

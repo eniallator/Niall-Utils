@@ -27,7 +27,7 @@ settling for the first working version:
 ```bash
 pnpm install         # install dependencies (pnpm via Corepack, Node >= 22.13)
 pnpm build           # tsc compile src/ -> dist/
-pnpm typecheck       # tsc --noEmit
+pnpm typecheck       # tsc --noEmit for src (tsconfig.json) and test files (tsconfig.test.json)
 pnpm lint            # oxlint src (type-aware, via oxlint-tsgolint; see .oxlintrc.json)
 pnpm format          # prettier --write . (also organizes/type-annotates imports)
 pnpm format:check    # prettier --check .
@@ -41,9 +41,8 @@ pnpm vitest run src/core/attempt.test.ts   # single test file
 pnpm vitest run -t "name of the test"      # single test case
 ```
 
-`pnpm typecheck` only covers `tsconfig.json`, which excludes `*.test.ts`. Test files are typechecked
-separately via `tsconfig.test.json` — `pnpm lint`'s type-aware pass uses it, or run
-`tsc --noEmit -p tsconfig.test.json` directly.
+`tsconfig.json` excludes `*.test.ts`, so `pnpm typecheck` runs a second pass over them via
+`tsconfig.test.json` (which `pnpm lint`'s type-aware pass also uses).
 
 Coverage thresholds are 100% for statements/branches/functions/lines, evaluated **per file** — a new file
 needs full coverage on its own, not just in aggregate.
