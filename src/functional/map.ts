@@ -77,9 +77,6 @@ export const mapFind = pipeable<{
   }
 );
 
-/** A tuple-typed array guaranteed to contain at least one `T`. */
-export type NonEmptyArray<T> = [T, ...T[]];
-
 /**
  * Maps an array while threading an accumulator through each step, similarly to combining
  * `Array.prototype.reduce` with `Array.prototype.map`. Pipeable: call as

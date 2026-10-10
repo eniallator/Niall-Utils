@@ -1,4 +1,4 @@
-import type { AnyArgFn } from "../timing/helpers.ts";
+import type { AnyArgFn } from "../core/types.ts";
 
 /**
  * The call signature of {@link pipe}: takes an initial value followed by up to 20 unary functions, each fed
@@ -441,51 +441,6 @@ export interface Pipe {
     rs: (_: R) => S,
     st: (_: S) => T
   ): T;
-  <
-    A,
-    B = never,
-    C = never,
-    D = never,
-    E = never,
-    F = never,
-    G = never,
-    H = never,
-    I = never,
-    J = never,
-    K = never,
-    L = never,
-    M = never,
-    N = never,
-    O = never,
-    P = never,
-    Q = never,
-    R = never,
-    S = never,
-    T = never,
-    U = never,
-  >(
-    data: A,
-    ab: (_: A) => B,
-    bc: (_: B) => C,
-    cd: (_: C) => D,
-    de: (_: D) => E,
-    ef: (_: E) => F,
-    fg: (_: F) => G,
-    gh: (_: G) => H,
-    hi: (_: H) => I,
-    ij: (_: I) => J,
-    jk: (_: J) => K,
-    kl: (_: K) => L,
-    lm: (_: L) => M,
-    mn: (_: M) => N,
-    no: (_: N) => O,
-    op: (_: O) => P,
-    pq: (_: P) => Q,
-    qr: (_: Q) => R,
-    rs: (_: R) => S,
-    st: (_: S) => T,
-    tu: (_: T) => U
-  ): U;
   <
     A,
     B = never,

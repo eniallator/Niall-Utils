@@ -63,8 +63,8 @@ export const timeSequence = <F>(
 };
 
 /**
- * Manages several named {@link sequence} animations and switches between them, resetting the new sequence's
- * start point whenever the active target changes.
+ * Manages several named, looping {@link sequence} animations and switches between them, rebuilding the
+ * active sequence from the target's frames whenever the target changes.
  * @template S A record mapping sequence names to their frame arrays.
  * @param {S} sequences The named sequences to switch between.
  * @param {number} perFrame How many total units each frame lasts.

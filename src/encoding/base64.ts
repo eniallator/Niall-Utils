@@ -1,5 +1,6 @@
 import { unsafeTag, type Tagged } from "../core/tagged.ts";
 import { raise } from "../core/utils.ts";
+import { typedRange } from "../data/range.ts";
 
 /** A string known to contain only valid base64 characters. */
 export type Base64 = Tagged<string, "Base64">;
@@ -11,8 +12,10 @@ export type Base64 = Tagged<string, "Base64">;
  */
 export const unsafeBase64 = unsafeTag<Base64>();
 
-const BASE_64_CHARS =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+// A single byte `n << 2` encodes to `btoa`'s character for the 6-bit value `n`, followed by padding.
+const BASE_64_CHARS = typedRange(64)
+  .map(n => btoa(String.fromCodePoint(n << 2)).charAt(0))
+  .join("");
 const BASE_64_REGEX = new RegExp(`^[${BASE_64_CHARS}]*$`);
 const BASE_64_CHAR_INDEX = new Map(
   BASE_64_CHARS.split("").map((char, index) => [char, index])
@@ -30,7 +33,8 @@ export const isValidBase64 = (str: string): str is Base64 =>
 /**
  * Encodes a non-negative integer as a base64 string.
  * @param {number} n The non-negative integer to encode.
- * @param {number} [length] If given, left-pads the result with the base64 zero character to this length.
+ * @param {number} [length] If given, left-pads the result with the base64 zero character to this length. A
+ * value needing more than `length` characters is truncated to its `length` least significant characters.
  * @returns {Base64} The base64-encoded representation of `n`.
  * @throws {Error} If `n` is `NaN` or negative.
  */

@@ -7,8 +7,6 @@ runInherit("pnpm", ["version", "minor"]);
 
 const {
   default: { version },
-} = await import("../package.json", {
-  with: { type: "json" },
-});
+} = await import("../package.json", { with: { type: "json" } });
 
 release(version);

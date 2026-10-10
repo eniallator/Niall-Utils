@@ -7,6 +7,7 @@ import { runInherit } from "./lib/proc.mjs";
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 export function release(version) {
+  runInherit("pnpm", ["prepublish"], { cwd: repoRoot });
   runInherit("git", ["add", "."], { cwd: repoRoot });
   runInherit("git", ["commit", "-m", `Release ${version}`], { cwd: repoRoot });
   runInherit("git", ["tag", "-a", version, "-m", `Release ${version}`], {
@@ -22,8 +23,6 @@ export function release(version) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const {
     default: { version },
-  } = await import("../package.json", {
-    with: { type: "json" },
-  });
+  } = await import("../package.json", { with: { type: "json" } });
   release(version);
 }

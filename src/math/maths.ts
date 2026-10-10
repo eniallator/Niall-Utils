@@ -23,8 +23,8 @@ export const polarToCartesian = (
   tuple(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
 
 /**
- * Computes `a mod b`, always returning a non-negative result (unlike JavaScript's `%` operator, which can
- * return a negative value for a negative `a` or a negative `b`). Pipeable: call as `positiveMod(a, b)` or
+ * Computes `a mod b`, always returning a non-negative result (unlike JavaScript's `%` operator, whose result
+ * takes the sign of `a`). Pipeable: call as `positiveMod(a, b)` or
  * `positiveMod(b)(a)`.
  * @param {number} a The dividend.
  * @param {number} b The divisor.
@@ -66,6 +66,22 @@ export type Add<A extends number, B extends number> = Extract<
 >;
 
 /**
+ * Subtracts one number type from another, at the type level. Resolves to `number` if the computation
+ * exceeds {@link RecursionLimit} or would go negative.
+ */
+export type Subtract<
+  A extends number,
+  B extends number,
+  I extends number = 0,
+> = I extends RecursionLimit
+  ? number
+  : I extends B
+    ? A
+    : A extends 0
+      ? number
+      : Subtract<Decrement<A>, B, Increment<I>>;
+
+/**
  * Multiplies two number types together, at the type level. Resolves to `number` if the computation exceeds
  * {@link RecursionLimit}.
  */
@@ -101,19 +117,3 @@ export type StringToNumber<
 > = Str extends `${infer Digit extends keyof DigitLookup}${infer Rest}`
   ? StringToNumber<Rest, Add<DigitLookup[Digit], Multiply<Acc, 10>>>
   : Acc;
-
-/**
- * Subtracts one number type from another, at the type level. Resolves to `number` if the computation
- * exceeds {@link RecursionLimit} or would go negative.
- */
-export type Subtract<
-  A extends number,
-  B extends number,
-  I extends number = 0,
-> = I extends RecursionLimit
-  ? number
-  : I extends B
-    ? A
-    : A extends 0
-      ? number
-      : Subtract<Decrement<A>, B, Increment<I>>;

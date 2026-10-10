@@ -19,6 +19,5 @@ export type Range<
  * @param {N} limit The number of elements.
  * @returns {Range<N>} The indices from `0` up to (but excluding) `limit`.
  */
-export function typedRange<N extends number>(limit: N): Range<N> {
-  return Array.from({ length: limit }, (_, index) => index) as Range<N>;
-}
+export const typedRange = <N extends number>(limit: N): Range<N> =>
+  Array.from({ length: limit }, (_, index) => index) as Range<N>;

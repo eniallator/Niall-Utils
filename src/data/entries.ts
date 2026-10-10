@@ -2,12 +2,12 @@ import { tuple } from "../core/tuple.ts";
 import { pipeable } from "../functional/pipeable.ts";
 
 /**
- * Returns an object's own keys, typed as `(keyof O)[]` instead of the widened `string[]`
+ * Returns an object's own enumerable keys, typed as `(keyof O)[]` instead of the widened `string[]`
  * that `Object.keys` returns. Pipeable: call as `typedKeys(obj, includeSymbols?)` or
  * `typedKeys(includeSymbols?)(obj)`.
  * @template O The type of the object being inspected.
  * @param {O} obj The object to read keys from.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {(keyof O)[]} The object's own keys.
  */
 export const typedKeys = pipeable<{
@@ -34,7 +34,7 @@ export type Entry<O extends object> = [keyof O, O[keyof O]];
  * `typedToEntries(obj, includeSymbols?)` or `typedToEntries(includeSymbols?)(obj)`.
  * @template O The type of the object being inspected.
  * @param {O} obj The object to read entries from.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {Entry<O>[]} The object's own `[key, value]` entries.
  */
 export const typedToEntries = pipeable<{
@@ -59,42 +59,87 @@ export const typedFromEntries = <O extends object>(
 
 /**
  * Maps every entry of an object to a new `[key, value]` pair, producing a new object, similarly to
- * `Array.prototype.map` but for objects.
+ * `Array.prototype.map` but for objects. Pipeable: call as `mapObject(obj, mapper, includeSymbols?)` or
+ * `mapObject(mapper, includeSymbols?)(obj)`.
  * @template I The type of the input object.
  * @template O The type of the resulting object.
  * @param {I} obj The object to map over.
  * @param {(entry: Entry<I>, index: number, array: readonly Entry<I>[]) => Entry<O>} mapper Maps each entry to a new entry.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {O} A new object built from the mapped entries.
  */
-export const mapObject = <I extends object, O extends object>(
-  obj: I,
-  mapper: (
-    entry: Entry<I>,
-    index: number,
-    array: readonly Entry<I>[]
-  ) => Entry<O>,
-  includeSymbols: boolean = false
-): O => typedFromEntries(typedToEntries(obj, includeSymbols).map(mapper));
+export const mapObject = pipeable<{
+  <I extends object, O extends object>(
+    obj: I,
+    mapper: (
+      entry: Entry<I>,
+      index: number,
+      array: readonly Entry<I>[]
+    ) => Entry<O>,
+    includeSymbols?: boolean
+  ): O;
+  <I extends object, O extends object>(
+    mapper: (
+      entry: Entry<I>,
+      index: number,
+      array: readonly Entry<I>[]
+    ) => Entry<O>,
+    includeSymbols?: boolean
+  ): (obj: I) => O;
+}>(
+  <I extends object, O extends object>(
+    obj: I,
+    mapper: (
+      entry: Entry<I>,
+      index: number,
+      array: readonly Entry<I>[]
+    ) => Entry<O>,
+    includeSymbols: boolean = false
+  ): O => typedFromEntries(typedToEntries(obj, includeSymbols).map(mapper)),
+  (args: readonly unknown[]) => typeof args[0] === "object"
+);
 
 /**
  * Filters an object's entries by a predicate, producing a new object, similarly to `Array.prototype.filter`
- * but for objects.
+ * but for objects. Pipeable: call as `filterObject(obj, predicate, includeSymbols?)` or
+ * `filterObject(predicate, includeSymbols?)(obj)`.
  * @template O The type of the object being filtered.
  * @param {O} obj The object to filter.
  * @param {(value: Entry<O>, index: number, array: readonly Entry<O>[]) => boolean} predicate Returns `true` to keep an entry.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {O} A new object containing only the entries that satisfied `predicate`.
  */
-export const filterObject = <O extends object>(
-  obj: O,
-  predicate: (
-    value: Entry<O>,
-    index: number,
-    array: readonly Entry<O>[]
-  ) => boolean,
-  includeSymbols: boolean = false
-): O => typedFromEntries(typedToEntries(obj, includeSymbols).filter(predicate));
+export const filterObject = pipeable<{
+  <O extends object>(
+    obj: O,
+    predicate: (
+      value: Entry<O>,
+      index: number,
+      array: readonly Entry<O>[]
+    ) => boolean,
+    includeSymbols?: boolean
+  ): O;
+  <O extends object>(
+    predicate: (
+      value: Entry<O>,
+      index: number,
+      array: readonly Entry<O>[]
+    ) => boolean,
+    includeSymbols?: boolean
+  ): (obj: O) => O;
+}>(
+  <O extends object>(
+    obj: O,
+    predicate: (
+      value: Entry<O>,
+      index: number,
+      array: readonly Entry<O>[]
+    ) => boolean,
+    includeSymbols: boolean = false
+  ): O =>
+    typedFromEntries(typedToEntries(obj, includeSymbols).filter(predicate)),
+  (args: readonly unknown[]) => typeof args[0] === "object"
+);
 
 /**
  * Maps every entry of a record to a new `[key, value]` pair, potentially changing the key and value types,
@@ -105,7 +150,7 @@ export const filterObject = <O extends object>(
  * @template V The value type of the resulting record.
  * @param {R} rec The record to map over.
  * @param {(entry: Entry<R>, index: number, array: readonly Entry<R>[]) => [K, V]} mapper Maps each entry to a new `[key, value]` pair.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {Record<K, V>} A new record built from the mapped entries.
  */
 export const mapRecord = pipeable<{
@@ -147,7 +192,7 @@ export const mapRecord = pipeable<{
  * @template K The subset of `O`'s keys to keep.
  * @param {O} obj The object to pick keys from.
  * @param {readonly K[]} keys The keys to keep.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {Pick<O, K>} A new object containing only the picked keys.
  */
 export const pick = pipeable<{
@@ -179,7 +224,7 @@ export const pick = pipeable<{
  * @template K The subset of `O`'s keys to remove.
  * @param {O} obj The object to remove keys from.
  * @param {readonly K[]} keys The keys to remove.
- * @param {boolean} [includeSymbols] Whether to also include own symbol keys. Defaults to `false`.
+ * @param {boolean} [includeSymbols] Whether to also include own enumerable symbol keys. Defaults to `false`.
  * @returns {Omit<O, K>} A new object without the removed keys.
  */
 export const omit = pipeable<{

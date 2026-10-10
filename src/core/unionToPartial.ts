@@ -26,7 +26,7 @@ type UnionToPartialRecurse<
  * const {a, b} = obj;
  * ```
  *
- * However this will not, as it will make Test equivalent to `({ a: string; b: undefined } | { a: undefined; b: number })`:
+ * However this will not, as it will make Test equivalent to `({ a: string; b?: undefined } | { a?: undefined; b: number })`:
  * ```ts
  * const {a, b} = obj as UnionToPartial<Test>;
  * ```

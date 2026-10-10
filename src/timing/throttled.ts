@@ -1,4 +1,4 @@
-import type { AnyArgFn, AsyncReturnType } from "./helpers.ts";
+import type { AnyArgFn, AsyncReturnType } from "../core/types.ts";
 
 /**
  * Wraps a function so it runs at most once per `throttleMs` window; calls made within the window return the
@@ -27,7 +27,8 @@ export const throttled = <Fn extends AnyArgFn>(
 
 /**
  * Async version of {@link throttled}: wraps an async function so it runs at most once per `throttleMs`
- * window, returning the most recently resolved value for calls made within the window.
+ * window, returning the most recently resolved value for calls made within the window. The window is only
+ * recorded once an invocation resolves, so calls made while one is still pending run `fn` again.
  * @template Fn The type of the async function being throttled.
  * @param {Fn} fn The async function to throttle.
  * @param {number} throttleMs The minimum time, in milliseconds, between invocations of `fn`.

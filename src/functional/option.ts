@@ -23,8 +23,8 @@ type UnpackTupledOptions<O extends readonly Option<NonNullable<unknown>>[]> = {
  * methods or `fold`.
  * @template A The non-nullable type of the wrapped value.
  * @template T Tracks whether this `Option` is statically known to be `"some"` or `"none"`. Defaults to
- * `undefined` (unknown), which is what most construction methods other than {@link Option.some} and
- * {@link Option.none} produce.
+ * `undefined` (unknown), which is what most construction methods other than {@link Option.some},
+ * {@link Option.someExact} and {@link Option.none} produce.
  */
 export class Option<
   A extends NonNullable<unknown>,

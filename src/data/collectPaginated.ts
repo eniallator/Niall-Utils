@@ -6,7 +6,9 @@ import { raise } from "../core/utils.ts";
  * @template T The type of item returned by each page.
  * @param {number} perPage The expected number of items per page; used to detect the last page. Must be greater than `0`.
  * @param {(page: number, perPage: number) => Promise<T[]>} getPage Fetches a single page (1-indexed) of results.
- * @param {(data: T[], page: number) => boolean} hasMoreData Should the loop run again?
+ * @param {(data: T[], page: number) => boolean} [hasMoreData] Should the loop run again? Receives every item
+ * collected so far and the page just fetched. Defaults to checking whether all pages so far were full (the
+ * total length equals `page * perPage`).
  * @returns {Promise<T[]>} All items from every page, concatenated in order.
  * @throws {Error} If `perPage` isn't greater than `0`.
  */

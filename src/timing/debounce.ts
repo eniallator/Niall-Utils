@@ -1,4 +1,4 @@
-import type { AnyArgFn } from "./helpers.ts";
+import type { AnyArgFn } from "../core/types.ts";
 
 /**
  * Wraps a function so that repeated calls within `debounceMs` of each other only run the wrapped function

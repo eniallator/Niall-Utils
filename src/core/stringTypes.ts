@@ -136,7 +136,7 @@ type ApplyMatch<
         ? Idx extends 0
           ? ParserError<"Expected at least one match for '1+'", "", M>
           : { out: ""; rest: "" }
-        : ParserError<"Exact match count not be satisfied", "", M>;
+        : ParserError<"Exact match count could not be satisfied", "", M>;
 
 type ParseTokens<
   Str extends string,

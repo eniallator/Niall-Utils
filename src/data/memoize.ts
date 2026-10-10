@@ -1,4 +1,4 @@
-import type { AnyArgFn } from "../timing/helpers.ts";
+import type { AnyArgFn } from "../core/types.ts";
 
 /**
  * Replaces the values `JSON.stringify` can't represent faithfully (`NaN`/`Infinity`/`-Infinity` all serialize

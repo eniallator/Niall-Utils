@@ -2,7 +2,8 @@ import { pipeable } from "../functional/pipeable.ts";
 
 /**
  * Splits an array into two groups based on a predicate function. When the predicate is a type guard, the
- * two output arrays are typed accordingly: the narrowed type, and the rest.
+ * two output arrays are typed accordingly: the narrowed type, and the rest. Pipeable: call as
+ * `partition(arr, predicate)` or `partition(predicate)(arr)`.
  * @template T The type of elements in the array.
  * @template S The narrowed type when `predicate` is a type guard. Defaults to `T` for a plain predicate.
  * @param {T[]} arr The array to partition.

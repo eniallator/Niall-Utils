@@ -31,9 +31,9 @@ pnpm add niall-utils
 ## Quick Example
 
 ```typescript
-import { cartesianToPolar, dom, raise, tuple } from "niall-utils";
+import { cartesianToPolar, raise, toElement, tuple } from "niall-utils";
 
-const el = dom.toHtml(`<div><span>Hello</span></div>`);
+const el = toElement(`<div><span>Hello</span></div>`);
 console.log(cartesianToPolar(1, 1));
 try {
   raise(new Error("boom"));
@@ -44,11 +44,11 @@ try {
 
 ## API Summary
 
-- **DOM (`ui/dom`)** - exposed as the `dom` object:
-  - `dom.get(selector, base?)` - select an element or throw.
-  - `dom.toHtml(htmlString)` - create an HTMLElement from a string template, inferring its element type.
-  - `dom.toAttrs(attrs)` - serialize an attribute map to an HTML attribute string.
-  - `dom.addListener(el, event, fn)` - strongly typed `addEventListener` wrapper.
+- **DOM (`ui/dom`)**
+  - `getElement(selector, base?)` - select an element or throw.
+  - `toElement(markup)` - create an HTML, SVG, or MathML element from a string template, inferring its element type.
+  - `toAttrs(attrs)` - serialize an attribute map to an HTML attribute string.
+  - `addListener(el, event, fn)` - strongly typed `addEventListener` wrapper.
 
 - **Utilities (`core/utils`)**
   - `raise(error)` - throw as an expression, typed `never`.
@@ -147,7 +147,7 @@ try {
 - **`src/timing/debounce.ts`, `src/timing/throttled.ts`** - rate-limiting helpers.
 - **`src/ui/animate.ts`** - lightweight animation and timing helpers.
 - **`src/ui/color.ts`** - color interpolation and gradient utilities.
-- **`src/ui/dom.ts`** - DOM helpers and small HTML helpers.
+- **`src/ui/dom.ts`** - DOM helpers: element selection, typed event listeners, and parsing HTML/SVG/MathML markup into typed elements.
 
 ## Tests
 
