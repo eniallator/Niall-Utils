@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-10-27
+
+### Added
+
+- `Option#orElse(other)` falls back to another `Option` when this one is empty; the result type narrows using
+  both `Option`s' statically known emptiness (`"some"`/`"none"`)
+
+### Changed
+
+- `attempt` and `attemptAsync` now pass the caught error to `onError` (typed `(error: unknown) => T`), so the
+  fallback can depend on what was thrown
+- `cartesianToPolar` and `polarToCartesian` return labelled tuples (`[magnitude, angle]` and `[x, y]`), and
+  `typedRange`'s parameter is named `length`; these are type-level naming changes only
+- `attempt`, `attemptAsync` and `generator` are now `const` arrow functions instead of `function` declarations
+- JSDoc: each overload of the pipeable functions (`typedKeys`, `typedToEntries`, `mapObject`, `filterObject`,
+  `mapRecord`, `pick`, `omit`, `mapFilter`, `mapFind`, `mapAccumulate`, `partition`, `slidingWindow`) and of
+  `attempt`/`attemptAsync` is documented individually, with the full description on the exported function
+- `debounce`'s timer is typed `ReturnType<typeof setTimeout>` instead of `number`, so it typechecks against
+  both the DOM and Node typings
+- `parseHexChannels` reads all four channels from a single 32-bit value (no change in behaviour)
+- Release and check scripts (`scripts/*.mjs`) rewritten in TypeScript and run through Node's type stripping;
+  `pnpm typecheck` now typechecks them, with `@types/node` added as a dev dependency
+- Bumped dependencies (`vitest`, `@vitest/coverage-v8`, `happy-dom`, `oxlint`, `oxlint-tsgolint`, `prettier`)
+
 ## [4.0.0] - 2026-10-10
 
 ### Added

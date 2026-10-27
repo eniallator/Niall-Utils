@@ -52,6 +52,38 @@ The release/check scripts in `scripts/` are TypeScript run directly by Node's ty
 Coverage thresholds are 100% for statements/branches/functions/lines, evaluated **per file** — a new file
 needs full coverage on its own, not just in aggregate.
 
+## Releasing
+
+Releases are cut from `main`. Claude prepares the release (steps 1-4); the user runs the publish step
+themselves, since it pushes, tags and publishes to npm (and needs an interactive `pnpm login`).
+
+1. **Find what changed.** `git describe --tags --abbrev=0` gives the last release tag (tags have no `v`
+   prefix; don't use `git tag --sort`, the old `v2.0.1` tag sorts first). Then review
+   `git log --oneline <tag>..HEAD` and `git diff <tag> HEAD -- src package.json` (the working tree should
+   already be clean, so nothing is missed).
+2. **Pick the semver bump** from the public API impact:
+   - **major**: anything breaking for consumers — removed/renamed exports, changed return or parameter types,
+     changed runtime behaviour, a dropped overload.
+   - **minor**: backwards-compatible additions — new exports, overloads, optional parameters, methods.
+   - **patch**: fixes only.
+   - Docs, internal refactors, tooling and dependency bumps don't change the bump on their own; they ride along
+     with whichever level the API changes call for (or patch if there are none).
+3. **Update [CHANGELOG.md](CHANGELOG.md).** Add `## [X.Y.Z] - YYYY-MM-DD` (today's date) above the previous
+   release, using the Keep a Changelog sections `Added` / `Changed` / `Fixed`. Prefix breaking items with
+   `**Breaking:**`, write one bullet per user-visible change, and collapse dependency bumps into a single
+   "Bumped dependencies (...)" bullet.
+4. **Bump `version` in `package.json`** to match. Edit it directly (or `pnpm version <level> --no-git-tag-version`);
+   plain `pnpm version` may also commit and tag, which `pnpm release` then duplicates.
+5. **The user runs `pnpm release`.** It runs `pnpm prepublish` (typecheck, lint, format check, build, tests,
+   publint, check-output), then `git add .`, commits `Release X.Y.Z`, creates the annotated `X.Y.Z` tag,
+   pushes the commit and tag with `--no-verify`, and runs `pnpm publish --access public`. Because of
+   `git add .`, nothing but the release changes should be in the working tree. `pnpm bump-and-release` is the
+   shortcut for a plain **minor** release: it logs in and runs `pnpm version minor` before releasing, so
+   it is only for when the changelog and version haven't been bumped yet.
+
+Never run `pnpm release`, `pnpm bump-and-release`, `pnpm publish` or any `git push` as part of preparing a
+release; stop after step 4 and hand over. `pnpm prepublish` is safe to run beforehand to confirm it will pass.
+
 ## Architecture
 
 ### Module layout and exports
