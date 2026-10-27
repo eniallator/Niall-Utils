@@ -16,17 +16,27 @@ const isOption: (
  * {@link Option} that resolves to one of those — combining `Array.prototype.map` and
  * `Array.prototype.filter` into a single pass. Pipeable: call as `mapFilter(arr, callback)` or
  * `mapFilter(callback)(arr)`.
- * @template I The type of the input array's elements.
- * @template O The non-nullable type of the mapped output.
- * @param {readonly I[]} arr The array to map over.
- * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to drop it.
- * @returns {O[]} The mapped, non-nullish results.
  */
 export const mapFilter = pipeable<{
+  /**
+   * Maps each element, dropping nullish results.
+   * @template I The type of the input array's elements.
+   * @template O The non-nullable type of the mapped output.
+   * @param {readonly I[]} arr The array to map over.
+   * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to drop it.
+   * @returns {O[]} The mapped, non-nullish results.
+   */
   <I, O extends NonNullable<unknown>>(
     arr: readonly I[],
     callback: MapFn<I, O>
   ): O[];
+  /**
+   * Data-last form of {@link mapFilter}, for use in `pipe`/`Array.prototype.map`/etc.
+   * @template I The type of the input array's elements.
+   * @template O The non-nullable type of the mapped output.
+   * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to drop it.
+   * @returns {(arr: readonly I[]) => O[]} A function mapping and filtering the array it's given.
+   */
   <I, O extends NonNullable<unknown>>(
     callback: MapFn<I, O>
   ): (arr: readonly I[]) => O[];
@@ -48,18 +58,29 @@ export const mapFilter = pipeable<{
 /**
  * Maps each element of an array with a callback, returning the first non-nullish mapped result (unwrapping
  * an {@link Option} if one is returned), similarly to combining `Array.prototype.map` with
- * `Array.prototype.find`. Pipeable: call as `mapFind(arr, callback)` or `mapFind(callback)(arr)`.
- * @template I The type of the input array's elements.
- * @template O The non-nullable type of the mapped output.
- * @param {readonly I[]} arr The array to search.
- * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to skip it.
- * @returns {O | null} The first non-nullish mapped result, or `null` if none was found.
+ * `Array.prototype.find`. Stops at the first match, so later elements are never mapped. Pipeable: call as
+ * `mapFind(arr, callback)` or `mapFind(callback)(arr)`.
  */
 export const mapFind = pipeable<{
+  /**
+   * Returns the first non-nullish mapped result.
+   * @template I The type of the input array's elements.
+   * @template O The non-nullable type of the mapped output.
+   * @param {readonly I[]} arr The array to search.
+   * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to skip it.
+   * @returns {O | null} The first non-nullish mapped result, or `null` if none was found.
+   */
   <I, O extends NonNullable<unknown>>(
     arr: readonly I[],
     callback: MapFn<I, O>
   ): O | null;
+  /**
+   * Data-last form of {@link mapFind}, for use in `pipe`/`Array.prototype.map`/etc.
+   * @template I The type of the input array's elements.
+   * @template O The non-nullable type of the mapped output.
+   * @param {MapFn<I, O>} callback Maps each element to an output value, an {@link Option}, or a nullish value to skip it.
+   * @returns {(arr: readonly I[]) => O | null} A function returning the first non-nullish mapped result of the array it's given, or `null`.
+   */
   <I, O extends NonNullable<unknown>>(
     callback: MapFn<I, O>
   ): (arr: readonly I[]) => O | null;
@@ -79,22 +100,35 @@ export const mapFind = pipeable<{
 
 /**
  * Maps an array while threading an accumulator through each step, similarly to combining
- * `Array.prototype.reduce` with `Array.prototype.map`. Pipeable: call as
+ * `Array.prototype.reduce` with `Array.prototype.map`. Each step returns the next accumulator and the mapped
+ * output for that element; only the outputs are returned. Pipeable: call as
  * `mapAccumulate(arr, callback, initial)` or `mapAccumulate(callback, initial)(arr)`.
- * @template I The type of the input array's elements.
- * @template Acc The type of the accumulator threaded between steps.
- * @template O The type of the mapped output.
- * @param {readonly I[]} arr The array to map over.
- * @param {(acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O]} callback Given the current accumulator and element, returns the next accumulator and the mapped output.
- * @param {Acc} initial The initial accumulator value.
- * @returns {O[]} The mapped outputs, in order.
  */
 export const mapAccumulate = pipeable<{
+  /**
+   * Maps each element, threading the accumulator through.
+   * @template I The type of the input array's elements.
+   * @template Acc The type of the accumulator threaded between steps.
+   * @template O The type of the mapped output.
+   * @param {readonly I[]} arr The array to map over.
+   * @param {(acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O]} callback Given the current accumulator and element, returns the next accumulator and the mapped output.
+   * @param {Acc} initial The initial accumulator value.
+   * @returns {O[]} The mapped outputs, in order.
+   */
   <I, Acc, O>(
     arr: readonly I[],
     callback: (acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O],
     initial: Acc
   ): O[];
+  /**
+   * Data-last form of {@link mapAccumulate}, for use in `pipe`/`Array.prototype.map`/etc.
+   * @template I The type of the input array's elements.
+   * @template Acc The type of the accumulator threaded between steps.
+   * @template O The type of the mapped output.
+   * @param {(acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O]} callback Given the current accumulator and element, returns the next accumulator and the mapped output.
+   * @param {Acc} initial The initial accumulator value.
+   * @returns {(arr: readonly I[]) => O[]} A function mapping the array it's given, threading the accumulator through.
+   */
   <I, Acc, O>(
     callback: (acc: Acc, val: I, index: number, arr: readonly I[]) => [Acc, O],
     initial: Acc

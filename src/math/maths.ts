@@ -7,7 +7,10 @@ import { simplePipeable } from "../functional/pipeable.ts";
  * @param {number} y The y coordinate.
  * @returns {[number, number]} A `[magnitude, angle]` tuple, where `angle` is in radians.
  */
-export const cartesianToPolar = (x: number, y: number): [number, number] =>
+export const cartesianToPolar = (
+  x: number,
+  y: number
+): [magnitude: number, angle: number] =>
   tuple(Math.hypot(x, y), Math.atan2(y, x));
 
 /**
@@ -19,7 +22,7 @@ export const cartesianToPolar = (x: number, y: number): [number, number] =>
 export const polarToCartesian = (
   magnitude: number,
   angle: number
-): [number, number] =>
+): [x: number, y: number] =>
   tuple(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
 
 /**

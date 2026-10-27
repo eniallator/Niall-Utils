@@ -12,7 +12,7 @@ export const debounce = <Fn extends AnyArgFn<void>>(
   fn: Fn,
   debounceMs: number
 ): Fn & { cancel: () => void } => {
-  let timer: number | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
   const debounced = ((...args: Parameters<Fn>) => {
     if (timer != null) clearTimeout(timer);

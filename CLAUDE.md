@@ -41,8 +41,13 @@ pnpm vitest run src/core/attempt.test.ts   # single test file
 pnpm vitest run -t "name of the test"      # single test case
 ```
 
-`tsconfig.json` excludes `*.test.ts`, so `pnpm typecheck` runs a second pass over them via
-`tsconfig.test.json` (which `pnpm lint`'s type-aware pass also uses).
+`tsconfig.json` excludes `*.test.ts` and `scripts/`, so `pnpm typecheck` runs a second pass over them via
+`tsconfig.test.json` (which `pnpm lint`'s type-aware pass also uses). That pass loads `@types/node` for the
+release scripts, so `src` must stay typed independently of the DOM/Node globals (e.g.
+`ReturnType<typeof setTimeout>`, not `number`).
+
+The release/check scripts in `scripts/` are TypeScript run directly by Node's type stripping
+(`node scripts/x.ts`), so keep them to erasable syntax (no enums, namespaces or parameter properties).
 
 Coverage thresholds are 100% for statements/branches/functions/lines, evaluated **per file** — a new file
 needs full coverage on its own, not just in aggregate.

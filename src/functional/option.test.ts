@@ -137,6 +137,38 @@ describe("Option", () => {
     ).toBe("none");
   });
 
+  // --- orElse ---
+  it("orElse returns this if Some, ignoring other", () => {
+    const self = Option.some(1);
+    expect(self.orElse(Option.some("other"))).toBe(self);
+    expect(self.orElse(Option.none<string>())).toBe(self);
+    expect(self.orElse(Option.from<string>(null))).toBe(self);
+  });
+  it("orElse returns other if None", () => {
+    const other = Option.some("other");
+    expect(Option.none<number>().orElse(other)).toBe(other);
+    expect(Option.none<number>().orElse(other).getOrNull()).toBe("other");
+  });
+  it("orElse on None with None stays None", () => {
+    expect(
+      Option.none<number>().orElse(Option.none<string>()).getOrNull()
+    ).toBeNull();
+  });
+  it("orElse works when emptiness is not statically known", () => {
+    expect(Option.from<number>(null).orElse(Option.some(2)).getOrNull()).toBe(
+      2
+    );
+    expect(Option.from(1).orElse(Option.some(2)).getOrNull()).toBe(1);
+  });
+  it("orElse can be chained", () => {
+    expect(
+      Option.none<number>()
+        .orElse(Option.from<number>(null))
+        .orElse(Option.some(3))
+        .getOrNull()
+    ).toBe(3);
+  });
+
   // --- toMonad ---
   it("toMonad returns Monad with value or null", () => {
     expect(Option.some(5).toMonad().get()).toBe(5);

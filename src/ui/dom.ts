@@ -30,22 +30,6 @@ export const addListener = <
   );
 };
 
-/**
- * Queries for a single element, throwing instead of returning `null` if it isn't found.
- * @template E The expected element type.
- * @param {string} selector The CSS selector to query for.
- * @param {ParentNode} [baseEl] The node to query within. Defaults to `document`.
- * @returns {E} The matched element.
- * @throws {Error} If no element matches `selector`.
- */
-// oxlint-disable-next-line typescript/no-unnecessary-type-parameters
-export const getElement = <E extends HTMLElement>(
-  selector: string,
-  baseEl: ParentNode = document
-): E =>
-  baseEl.querySelector<E>(selector) ??
-  raise(new Error(`Could not find element with selector "${selector}"`));
-
 /** Escapes the characters that are special inside a double-quoted HTML attribute value: `&` and `"`. */
 const escapeAttrValue = (val: string): string =>
   val.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
@@ -215,3 +199,19 @@ export const toElement = <const S extends string>(str: S): InferElement<S> => {
 
   return (result ?? raise(new Error("No nodes found"))) as InferElement<S>;
 };
+
+/**
+ * Queries for a single element, throwing instead of returning `null` if it isn't found.
+ * @template E The expected element type.
+ * @param {string} selector The CSS selector to query for.
+ * @param {ParentNode} [baseEl] The node to query within. Defaults to `document`.
+ * @returns {E} The matched element.
+ * @throws {Error} If no element matches `selector`.
+ */
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters
+export const getElement = <E extends HTMLElement>(
+  selector: string,
+  baseEl: ParentNode = document
+): E =>
+  baseEl.querySelector<E>(selector) ??
+  raise(new Error(`Could not find element with selector "${selector}"`));

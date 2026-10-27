@@ -4,20 +4,25 @@ import { pipeable } from "../functional/pipeable.ts";
 import { positiveMod } from "./maths.ts";
 
 /**
- * Slides a fixed-size window over an array, returning a tuple for each window position. Pipeable: call as
- * `slidingWindow(arr, windowSize, start?, step?, circular?)` or
- * `slidingWindow(windowSize, start?, step?, circular?)(arr)`.
- * @template T The type of the array's elements.
- * @template S The window size.
- * @param {readonly T[]} arr The array to slide over.
- * @param {S} windowSize The number of elements in each window. Must be non-negative.
- * @param {number} [start] The index to start the first window at (can be negative when `circular` is `true`). Defaults to `0`.
- * @param {number} [step] How many elements to advance between windows. Must be greater than `0`. Defaults to `1`.
- * @param {boolean} [circular] Whether windows wrap around past the end of the array back to the start. When `false`, the last window stops once it would run past the array's end. Defaults to `true`.
- * @returns {FillTuple<T, S>[]} An array of fixed-length `windowSize` tuples, one per window position.
- * @throws {Error} If `windowSize` is negative or `step` isn't greater than `0`.
+ * Slides a fixed-size window over an array, returning a tuple for each window position. By default the
+ * windows wrap around the end of the array (`circular`), so one starts at every `step`th index; with
+ * `circular` off, only windows that fit entirely within the array are produced. Throws if `windowSize` is negative or
+ * `step` isn't greater than `0`. Pipeable: call as `slidingWindow(arr, windowSize, start?, step?, circular?)`
+ * or `slidingWindow(windowSize, start?, step?, circular?)(arr)`.
  */
 export const slidingWindow = pipeable<{
+  /**
+   * Returns a fixed-length tuple for each window position.
+   * @template T The type of the array's elements.
+   * @template S The window size.
+   * @param {readonly T[]} arr The array to slide over.
+   * @param {S} windowSize The number of elements in each window. Must be non-negative.
+   * @param {number} [start] The index to start the first window at (can be negative when `circular` is `true`). Defaults to `0`.
+   * @param {number} [step] How many elements to advance between windows. Must be greater than `0`. Defaults to `1`.
+   * @param {boolean} [circular] Whether windows wrap around past the end of the array back to the start. When `false`, the last window stops once it would run past the array's end. Defaults to `true`.
+   * @returns {FillTuple<T, S>[]} An array of fixed-length `windowSize` tuples, one per window position.
+   * @throws {Error} If `windowSize` is negative or `step` isn't greater than `0`.
+   */
   <T, S extends number>(
     arr: readonly T[],
     windowSize: S,
@@ -25,6 +30,16 @@ export const slidingWindow = pipeable<{
     step?: number,
     circular?: boolean
   ): FillTuple<T, S>[];
+  /**
+   * Data-last form of {@link slidingWindow}, for use in `pipe`/`Array.prototype.map`/etc.
+   * @template S The window size.
+   * @param {S} windowSize The number of elements in each window. Must be non-negative.
+   * @param {number} [start] The index to start the first window at (can be negative when `circular` is `true`). Defaults to `0`.
+   * @param {number} [step] How many elements to advance between windows. Must be greater than `0`. Defaults to `1`.
+   * @param {boolean} [circular] Whether windows wrap around past the end of the array back to the start. When `false`, the last window stops once it would run past the array's end. Defaults to `true`.
+   * @returns {<T>(arr: readonly T[]) => FillTuple<T, S>[]} A function sliding the window over the array it's given.
+   * @throws {Error} If `windowSize` is negative or `step` isn't greater than `0`.
+   */
   <S extends number>(
     windowSize: S,
     start?: number,

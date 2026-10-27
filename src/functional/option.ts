@@ -181,6 +181,41 @@ export class Option<
   }
 
   /**
+   * Falls back to another `Option` if this one is empty. The result type narrows using both `Option`s'
+   * statically known emptiness: it is `this` if this is `"some"`, `other` if this is `"none"` and `other`
+   * is `"some"`, an empty `Option` if both are `"none"`, and otherwise `this | other`.
+   * @template B The non-nullable type of the fallback `Option`'s value.
+   * @template BType Tracks whether the fallback `Option` is statically known to be `"some"` or `"none"`.
+   * @param {Option<B, BType>} other The `Option` to fall back to if this one is empty.
+   * @returns {this | Option<B, BType>} This `Option` if it holds a value, otherwise `other`.
+   */
+  orElse<B extends NonNullable<unknown>, BType extends OptionType>(
+    other: Option<B, BType>
+  ): FoldOptionType<
+    T,
+    this,
+    FoldOptionType<
+      BType,
+      Option<B, BType>,
+      Option<A | B, "none">,
+      this | Option<B, BType>
+    >,
+    this | Option<B, BType>
+  > {
+    return (this.value != null ? this : other) as FoldOptionType<
+      T,
+      this,
+      FoldOptionType<
+        BType,
+        Option<B, BType>,
+        Option<A | B, "none">,
+        this | Option<B, BType>
+      >,
+      this | Option<B, BType>
+    >;
+  }
+
+  /**
    * Unwraps the held value, or `null` if empty. If `T` is statically known to be `"some"`/`"none"`, the
    * return type reflects that instead of `A | null`.
    * @returns {A | null} The held value, or `null` if empty.

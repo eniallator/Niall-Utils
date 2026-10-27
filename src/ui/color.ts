@@ -20,13 +20,8 @@ export const parseHexChannels = (color: string): FillTuple<number, 4> => {
   const match =
     HEX_COLOR_REGEX.exec(color) ?? raise(new Error(`Invalid colour ${color}`));
   const [_, rgb, a = "ff"] = match;
-  const n = Number.parseInt(rgb as string, 16);
-  return tuple(
-    (n >> 16) & 255,
-    (n >> 8) & 255,
-    n & 255,
-    Number.parseInt(a, 16)
-  );
+  const n = Number.parseInt(`${rgb}${a}`, 16);
+  return tuple((n >> 24) & 255, (n >> 16) & 255, (n >> 8) & 255, n & 255);
 };
 
 /**
