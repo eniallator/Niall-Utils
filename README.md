@@ -70,7 +70,8 @@ try {
   - `lerpColors`, `createWeightedGradient` - color interpolation and weighted gradient builder.
 
 - **Animation helpers (`ui/animate`)**
-  - `sequence`, `timeSequence`, `multiSequence`, `timeMultiSequence` - lightweight frame sequence utilities.
+  - `sequence(total, frames, { perFrame | frameDuration, loop? })`, `timeSequence` - stateless frame sequencing from a running total (any unit) or elapsed time, returning `{ frame, index, delta, done, cycle }` (pipeable).
+  - `multiSequence`, `timeMultiSequence` - switch between named sequences, restarting on each switch; stateless, so each result carries the `state` to pass into the next call.
 
 - **Data helpers (`data`)**
   - `zip` - merge arrays index-wise with bounds checking.
